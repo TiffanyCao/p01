@@ -6,3 +6,7 @@ DEVLOG
 tiffanyC -- 2019-11-17 23:18
     - uploaded design.pdf, with description of overall project, database planning, page(s) layout, and more
     - each member wrote descriptions for the APIs they were assigned to
+
+kiranV -- 2019-11-18 16:01
+    - configured directories for css and template html files
+    - wrote base jinja template for all pages to extend
