@@ -7,6 +7,40 @@ P01 -- Local Stylesheets
 
 /* NOTE: this should not be used to duplicate things that already exist in bootstrap! its only to fill in the blanks where bootstrap tools don't already exist to serve the given purpose */
 
+/*
+Coolors.co color profile (feel free to change!)
+A: #81d2c7 (bright ocean blue)
+B: #f0e7d8 (sandy pale)
+C: #86a5d9 (sky-ish blue)
+D: #ccd6eb (faded blue)
+E: #e9ecf5 (blue-ish offwhite)
+*/
+
+
 body {
-    background-color:#080808;
+    background-color:#81d2c7;
+    color: #f0e7d8;
+}
+.header-container {
+    background-color: #ccd6eb;
+    color: black;
+}
+.content-container {
+    width: 60%;
+    padding: 15px;
+}
+.footer-container {
+    background-color: #ccd6eb;
+    color: black;
+    position: fixed;
+    bottom: 0;
+}
+.footer-container p#credits {
+    margin-top: .5rem;
+    margin-left: 5%;
+}
+#welcome-jumbo {
+    background-color:#f0e7d8;
+    opacity:0.6;
+    color: black;
 }
