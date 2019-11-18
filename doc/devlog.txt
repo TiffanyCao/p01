@@ -1,0 +1,8 @@
+Boneless Ice
+SoftDev1 pd1
+p01 - Ocean Getaways
+DEVLOG
+
+tiffanyC -- 2019-11-17 23:18
+    - uploaded design.pdf, with description of overall project, database planning, page(s) layout, and more
+    - each member wrote descriptions for the APIs they were assigned to
