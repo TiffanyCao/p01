@@ -1,5 +1,5 @@
 # Ocean Getaways by Team Boneless Ice
-## Ayham Alnasser, Clement Chan, Kiran Vuksanaj, and Tiffany Cao
+## Ayham Alnasser, Clement Chan, Kiran Vuksanaj, and Tiffany Cao (PM)
 
 #### PROGRAM OVERVIEW:
 
