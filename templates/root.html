@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+Team Boneless Ice - Ayham Alnasser, Tiffany Cao, Clement Chan, Kiran Vuksanaj
+Softdev1 pd1
+P01 -- root jinja template
+2019-11-18
+-->
+
+<html>
+  <head>
+    <title>
+      {% block title %}Webpage{% endblock %} || Ocean Getaways
+    </title>
+
+    <!-- link to bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- local stylesheet -->
+    <link rel="stylesheet" href="/static/css/{% block stylesheet %}style.css{% endblock %}" type="text/css">
+  </head>
+  <body>
+    {% block header %}
+
+    <div class="container-fluid header-container">
+      <div class="row">
+	<div class="col-sm">
+	  <h3>Ocean Getaways</h3>
+	</div>
+	<div class="col-sm">
+	  <p class="lead">by Boneless Ice</p>
+	</div>
+      </div>
+    </div>
+        
+    {% endblock %}
+
+    <div class="container-fluid content-container">
+      {% block content %}
+      {% endblock %}
+    </div>
+    
+    {% block footer %}
+
+    <div class="container-fluid footer-container">
+      <div class="row">
+	<p class="lead" id="credits">
+	  Copyright &copy; 2019 <strong>Boneless Ice</strong> - Ayham Alnasser, Tiffany Cao (PM), Clement Chan, Kiran Vuksanaj<br />
+	</p>
+      </div>
+    </div>
+    
+    {% endblock %}
+  </body>
+</html>
