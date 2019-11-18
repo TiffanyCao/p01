@@ -1,0 +1,12 @@
+/*
+Boneless Ice - Ayham Alnasser, Tiffany Cao, Clement Chan, Kiran Vuksanaj
+Softdev1 pd1
+P01 -- Local Stylesheets
+2019-11-18
+*/
+
+/* NOTE: this should not be used to duplicate things that already exist in bootstrap! its only to fill in the blanks where bootstrap tools don't already exist to serve the given purpose */
+
+body {
+    background-color:#080808;
+}
