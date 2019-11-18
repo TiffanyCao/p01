@@ -1,4 +1,17 @@
 {% extends "root.html" %}
 {% block content %}
-hewwo ??
+
+<div class="jumbotron" id="welcome-jumbo">
+  <h1 class="display-4">Welcome!</h1>
+  <p class="lead">
+    Welcome to <em>Ocean Getaways</em>, by Boneless Ice! Use this site to learn about a potential travel destination; enter a city below, and you'll receive information about live-updated weather reports, photographs of the area, currency exchange rates, and more!
+  </p>
+  <hr class="my-4" />
+  <p>Enter the name of a city below to begin!</p>
+  <form action="/city">
+    <input type="text" name="city-name" placeholder="Enter a city name here" />
+    <input type="submit" name="submit" value="Discover" />
+  </form>
+</div>
+
 {% endblock %}
