@@ -38,13 +38,46 @@ def addCurrency(base, destination, rate, timestamp):
     db.close()
     return "done"
 
+# ======================= Part 2: API Accessing Functions =======================
 
-# ======================= Part 2: Routes =======================
+mapquest_key = "towBT1Gfo92PG6GjBcJs7NoIswGUtsaH"
+mapquest_request = "http://open.mapquestapi.com/geocoding/v1/address?key={}&location={}"
+
+def geolocate(city):
+    city_encoded = city.replace(' ','%20')
+    url = mapquest_request.format(mapquest_key,city_encoded)
+    u = urllib.request.urlopen(url)
+    response = u.read()
+    data = json.loads(response)
+    if data['info']['statuscode'] != 0:
+        print("error arose while using Mapquest Geolocator")
+        raise ValueError('Status code of {} while accessing Mapquest Geolocator: {}',data['info']['statuscode'],data['info']['messages'][0])
+    result = data['results'][0]['locations'][0]
+    out = {} # to nicely package only the results We Want, creating a new dictionary; makes it easier to get country code, etc.
+    out['country'] = result['adminArea1']
+    out['lat'] = result['latLng']['lat']
+    out['lon'] = result['latLng']['lng']
+    out['mapurl'] = result['mapUrl']
+    return out
+    
+    
+
+# ======================= Part 3: Routes =======================
 
 @app.route("/")
 def landing_page():
     return render_template("welcome.html")
 
+@app.route("/city")
+def process_city():
+    cityname = request.args['city_name']
+    print(cityname)
+
+    geoloc = geolocate(cityname)
+
+    print(geoloc['country'])
+    
+    return render_template("root.html") # temporary!
 @app.route("/currency")
 def money():
     u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
