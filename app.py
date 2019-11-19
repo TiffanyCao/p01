@@ -20,29 +20,16 @@ def addCurrency(base, destination, rate, timestamp):
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
     # check to see if database already has this base-destination pair
-    command = "SELECT destination, rate FROM currency WHERE base = \"" + base + "\""
+    command = "SELECT rate FROM currency WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
     cur = c.execute(command)
-    temp = cur.fetchall()
-    for row in temp:
-        if row[0] == destination:
-            if row[1] != rate: # updates exchange rate if not equal
-                command = "UPDATE currency SET rate = \"" + rate + "\" WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
-                c.execute(command)
-                db.commit()
-                db.close()
-                return "updated rate"
-    # check to see if database already has this destination-base pair
-    command = "SELECT destination, rate FROM currency WHERE base = \"" + destination + "\""
-    cur = c.execute(command)
-    temp = cur.fetchall()
-    for row in temp:
-        if row[0] == base:
-            if row[1] != rate: # updates exchange rate if not equal
-                command = "UPDATE currency SET rate = \"" + rate + "\" WHERE base = \"" + destination + "\" AND destination = \"" + base + "\""
-                c.execute(command)
-                db.commit()
-                db.close()
-                return "updated rate"
+    temp = cur.fetchone()
+    if temp:
+        if temp[0] != rate: # updates exchange rate if not equal
+            command = "UPDATE currency SET rate = \"" + rate + "\" WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
+            c.execute(command)
+            db.commit()
+            db.close()
+            return "updated rate"
     # if no base-destination pair exists, enter the new entry into the database
     command = "INSERT INTO currency (base, destination, rate, timestamp) " \
               "VALUES (\"" + base + "\", \"" + destination + "\", \"" + rate + "\", \"" + timestamp + "\")"

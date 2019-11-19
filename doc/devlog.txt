@@ -9,10 +9,17 @@ tiffanyC -- 2019-11-17 23:18
 
 kiranV -- 2019-11-18 16:01
     - configured directories for css and template html files
-    - wrote base jinja template for all pages to extend
+    - wrote base Jinja template for all pages to extend
     - copied basic flask app configuring root route
 
 kiranV -- 2019-11-18 17:49
     - generated coolors.co colorscheme with vacation vibes in mind (see comment in style.css)
     - added basic header, footer to root.html and expanded usage of bootstrap containers
-    - created base for landing page out of a boostrap jumbotron
+    - created base for landing page out of a bootstrap jumbotron
+
+tiffanyC -- 2019-11-18 22:20
+    - created a currency.html page and its route for displaying currency exchange rates. The default exchange right now is USD to EUR.
+    - wrote a function for a currency exchange rate database that has yet to be tested (the database itself has not been created). The function is meant to
+      update an existing exchange rate between a base currency and a desired currency in the database or create an entry for it if the rate has not already been stored.
+    - realized there was a more succinct query call for the database, so there are two commits for the function. Also realized there was a mistake in the original
+      function so that part was removed
