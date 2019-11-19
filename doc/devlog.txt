@@ -23,3 +23,8 @@ tiffanyC -- 2019-11-18 22:20
       update an existing exchange rate between a base currency and a desired currency in the database or create an entry for it if the rate has not already been stored.
     - realized there was a more succinct query call for the database, so there are two commits for the function. Also realized there was a mistake in the original
       function so that part was removed
+
+kiranV -- 2019-11-19 15:29
+    - wrote geolocate() function to get information from http request from geolocating API
+    * i haven't yet dealt with caching information!! still gotta do that
+    - started route for processing the city input, calling geolocate() (will call more API functions soon)
