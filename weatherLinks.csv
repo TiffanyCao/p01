@@ -1,0 +1,14 @@
+Weather,Link
+clear-day,https://image.flaticon.com/icons/svg/136/136723.svg
+clear-night,https://image.flaticon.com/icons/svg/414/414840.svg
+cloudy,https://image.flaticon.com/icons/svg/414/414825.svg
+partly-cloudy-day,https://image.flaticon.com/icons/svg/1146/1146808.svg
+partly-cloudy-night,https://image.flaticon.com/icons/svg/414/414831.svg
+fog,https://image.flaticon.com/icons/svg/2076/2076827.svg
+rain,https://image.flaticon.com/icons/svg/1691/1691521.svg
+sleet,https://image.flaticon.com/icons/svg/2204/2204342.svg
+wind,https://image.flaticon.com/icons/svg/2201/2201153.svg
+thunderstorm,https://image.flaticon.com/icons/svg/2201/2201130.svg
+snow,https://image.flaticon.com/icons/svg/1116/1116724.svg
+hail,https://image.flaticon.com/icons/svg/1779/1779856.svg
+tornado,https://image.flaticon.com/icons/svg/2206/2206194.svg

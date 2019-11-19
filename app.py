@@ -14,7 +14,7 @@ baseC = "USD"
 destinationC = "EUR"
 # DB_FILE = "data/travel.db"
 
-# =================== Part 1: Database Accessing Functions ===================
+# =================== Part 1: Database/Table Accessing Functions ===================
 
 def addCurrency(base, destination, rate, timestamp):
     db = sqlite3.connect(DB_FILE)  # open database
@@ -38,6 +38,16 @@ def addCurrency(base, destination, rate, timestamp):
     db.close()
     return "done"
 
+dict = {}
+file = open("weatherLinks.csv", "r") #opens second file with links
+content = file.readlines() #parse through files by line
+content = content[1:len(content)] #take out the table heading
+for line in content:
+    line = line.strip() #removes \n
+    line = line.split(",") #if line does not contain quotes, split by comma
+    dict[line[0]] = (line[1]) #key value pair
+print(dict) #testing results
+file.close()
 
 # ======================= Part 2: Routes =======================
 
