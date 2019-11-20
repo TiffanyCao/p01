@@ -10,11 +10,27 @@ import urllib
 app = Flask(__name__)
 
 app.secret_key = "water"
+
 baseC = "USD"
 destinationC = "EUR"
 # DB_FILE = "data/travel.db"
 
 # =================== Part 1: Database/Table Accessing Functions ===================
+
+def checkCurrency(base, destination)
+    db = sqlite3.connect(DB_FILE)  # open database
+    c = db.cursor()
+    # check to see if database already has this base-destination pair
+    command = "SELECT rate, timestamp FROM currency WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
+    cur = c.execute(command)
+    temp = cur.fetchone()
+    if temp:
+        if temp[0][1] < time:
+            return "need update"
+        else: return temp[0][0]
+    db.commit()
+    db.close()
+    return "pair not found"
 
 def addCurrency(base, destination, rate, timestamp):
     db = sqlite3.connect(DB_FILE)  # open database
@@ -24,19 +40,23 @@ def addCurrency(base, destination, rate, timestamp):
     cur = c.execute(command)
     temp = cur.fetchone()
     if temp:
+        command = "UPDATE currency SET timestamp = \"" + timestamp + "\" WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
+        c.execute(command)
+        db.commit()
         if temp[0] != rate: # updates exchange rate if not equal
             command = "UPDATE currency SET rate = \"" + rate + "\" WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
             c.execute(command)
             db.commit()
             db.close()
-            return "updated rate"
+            return "updated rate and time"
+        else: return "updated time"
     # if no base-destination pair exists, enter the new entry into the database
     command = "INSERT INTO currency (base, destination, rate, timestamp) " \
               "VALUES (\"" + base + "\", \"" + destination + "\", \"" + rate + "\", \"" + timestamp + "\")"
     c.execute(command)  # store currency rate between a base country and the destination
     db.commit()
     db.close()
-    return "done"
+    return "added new pair"
 
 dict = {}
 file = open("weatherLinks.csv", "r") #opens second file with links
@@ -72,6 +92,7 @@ def geolocate(city):
     out['mapurl'] = result['mapUrl']
     return out
 
+
 restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
 
 def country_info(country): # country code, 2 letters (would work w a three letter code too)
@@ -95,27 +116,35 @@ def landing_page():
     flash('example error','error')
     return render_template("welcome.html")
 
+
 @app.route("/city")
 def process_city():
     cityname = request.args['city_name']
-    print(cityname)
+    session['destination'] = cityname
+    # print(cityname)
 
     geoloc = geolocate(cityname)
+    session['baseCountry'] = geoloc['country']
 
-    print(geoloc['country'])
+    # print(geoloc['country'])
     country = country_info(geoloc['country'])
-    print(country['name'])
-    print(country['currency']['code']) # this can be passed into the currency thingy
+    session['desiredCurrency'] = country['currency']['code'] # this can be passed into the currency thingy
+
+    # print(country['name'])
+    # print(country['currency']['code'])
 
     flash('Currency symbol: {}'.format(country['currency']['code']))
-    
+
     return render_template("root.html") # temporary!
+
+
 @app.route("/currency")
 def money():
+
     u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
     response= u.read()
     data = json.loads(response)
-    data = data['rates']['' + destinationC]
+    data = data['rates']['' + session['desiredCurrency']]
     # addCurrency(baseC, destinationC, data, timestamp)
     return render_template("currency.html", rate = data)
 
