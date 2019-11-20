@@ -28,3 +28,7 @@ kiranV -- 2019-11-19 15:29
     - wrote geolocate() function to get information from http request from geolocating API
     * i haven't yet dealt with caching information!! still gotta do that
     - started route for processing the city input, calling geolocate() (will call more API functions soon)
+
+kiranV -- 2019-11-19 19:19
+    - wrote function to get information from REST Countries API
+    * again, haven't yet dealt with caching information (although it might not be necessary, no API keys here)
