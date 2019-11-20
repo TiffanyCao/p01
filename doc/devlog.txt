@@ -37,6 +37,11 @@ kiranV -- 2019-11-19 19:19
     - wrote function to get information from REST Countries API
     * again, haven't yet dealt with caching information (although it might not be necessary, no API keys here)
 
+kiranV -- 2019-11-19 20:22
+    - wrote function to get information from REST Countries API
+    * again, haven't yet dealt with caching information (although it might not be necessary, no API keys here)
+    - added Bootstrap Alerts to display flashed messages, taking advantage of the category argument to change the alert color
+
 tiffanyC -- 2019-11-19 20:25
     - split addCurrency function into two functions
     - checkCurrency function written: it checks the currency exchange database to see if the base currency and destination currency pair already exists, and returns the rate and
