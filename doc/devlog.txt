@@ -49,3 +49,7 @@ tiffanyC -- 2019-11-19 20:25
     - updateCurrency function written: it either updates the timestamp and exchange rate of an existing pair in the database or adds a new row of the base currency, destination
       currency, rate, and timestamp
     - updated the currency.html page and currency route to reflect this change, but all of this has yet to be tested
+
+kiranV -- 2019-11-19 22:08
+    - uploaded updated design doc, containing updates to list of APIs to be implemented, additional section for bootstrap FEF, and other minor changes
+    *** these updates encompass changes made by all group memebers!!
