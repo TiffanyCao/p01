@@ -3,7 +3,7 @@
 # P01 -- flask app, ocean getaways
 # 2019-11-18
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, flash
 import json
 import urllib
 
@@ -91,6 +91,8 @@ def country_info(country): # country code, 2 letters (would work w a three lette
 
 @app.route("/")
 def landing_page():
+    flash('example info message')
+    flash('example error','error')
     return render_template("welcome.html")
 
 @app.route("/city")
@@ -104,6 +106,8 @@ def process_city():
     country = country_info(geoloc['country'])
     print(country['name'])
     print(country['currency']['code']) # this can be passed into the currency thingy
+
+    flash('Currency symbol: {}'.format(country['currency']['code']))
     
     return render_template("root.html") # temporary!
 @app.route("/currency")

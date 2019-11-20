@@ -35,8 +35,20 @@ P01 -- root jinja template
     {% endblock %}
 
     <div class="container-fluid content-container">
+
+      {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+      {% for cat,msg in messages %}
+      <div class="alert alert-{% if cat == 'error' %}danger{% else %}info{% endif %}" role="alert">
+	{{msg}}
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
       {% block content %}
       {% endblock %}
+
     </div>
     
     {% block footer %}
