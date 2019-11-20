@@ -72,6 +72,19 @@ def geolocate(city):
     out['mapurl'] = result['mapUrl']
     return out
 
+restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
+
+def country_info(country): # country code, 2 letters (would work w a three letter code too)
+    url = restcountries_request.format(country)
+    u = urllib.request.urlopen(url)
+    print(urllib.request.getproxies()) # just curious
+    response = u.read()
+    data = json.loads(response)
+
+    out = {} # again to nicely package only the results we want, makes other code cleaner!
+    out['currency'] = data['currencies'][0]
+    out['name'] = data['name']
+    return out
 
 
 # ======================= Part 3: Routes =======================
@@ -88,7 +101,10 @@ def process_city():
     geoloc = geolocate(cityname)
 
     print(geoloc['country'])
-
+    country = country_info(geoloc['country'])
+    print(country['name'])
+    print(country['currency']['code']) # this can be passed into the currency thingy
+    
     return render_template("root.html") # temporary!
 @app.route("/currency")
 def money():
