@@ -29,6 +29,18 @@ kiranV -- 2019-11-19 15:29
     * i haven't yet dealt with caching information!! still gotta do that
     - started route for processing the city input, calling geolocate() (will call more API functions soon)
 
+tiffanyC -- 2019-11-19 18:00
+    - wrote a csv file and dictionary for weather forecast names and their links
+    * have yet to check if these links work
+
 kiranV -- 2019-11-19 19:19
     - wrote function to get information from REST Countries API
     * again, haven't yet dealt with caching information (although it might not be necessary, no API keys here)
+
+tiffanyC -- 2019-11-19 20:25
+    - split addCurrency function into two functions
+    - checkCurrency function written: it checks the currency exchange database to see if the base currency and destination currency pair already exists, and returns the rate and
+      the timestamp of when it was last updated
+    - updateCurrency function written: it either updates the timestamp and exchange rate of an existing pair in the database or adds a new row of the base currency, destination
+      currency, rate, and timestamp
+    - updated the currency.html page and currency route to reflect this change, but all of this has yet to be tested
