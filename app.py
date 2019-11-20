@@ -6,6 +6,7 @@
 from flask import Flask, render_template, request, session, flash
 import json
 import urllib
+import sqlite3
 
 app = Flask(__name__)
 
@@ -13,26 +14,29 @@ app.secret_key = "water"
 
 baseC = "USD"
 destinationC = "EUR"
-# DB_FILE = "data/travel.db"
+DB_FILE = "data/travel.db"
 
 # =================== Part 1: Database/Table Accessing Functions ===================
 
-def checkCurrency(base, destination)
+def checkCurrency(base, destination):
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
     # check to see if database already has this base-destination pair
     command = "SELECT rate, timestamp FROM currency WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
     cur = c.execute(command)
     temp = cur.fetchone()
+    print("here is temp")
+    print(temp)
     if temp:
-        if temp[0][1] < time:
-            return "need update"
-        else: return temp[0][0]
+        # if temp[0][1] < time:
+        #     return "need update"
+        # else:
+        return temp[0]
     db.commit()
     db.close()
     return "pair not found"
 
-def addCurrency(base, destination, rate, timestamp):
+def updateCurrency(base, destination, rate, timestamp):
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
     # check to see if database already has this base-destination pair
@@ -123,12 +127,12 @@ def process_city():
     session['destination'] = cityname
     # print(cityname)
 
-    geoloc = geolocate(cityname)
-    session['baseCountry'] = geoloc['country']
+    geoloc = geolocate(cityname) # get the country of the desired city
+    session['desiredCountry'] = geoloc['country']
 
     # print(geoloc['country'])
-    country = country_info(geoloc['country'])
-    session['desiredCurrency'] = country['currency']['code'] # this can be passed into the currency thingy
+    country = country_info(geoloc['country']) # get the information of the desired country
+    session['desiredCurrency'] = country['currency']['code'] # get the currency code for the country
 
     # print(country['name'])
     # print(country['currency']['code'])
@@ -140,13 +144,17 @@ def process_city():
 
 @app.route("/currency")
 def money():
+    check = checkCurrency(baseC, session['desiredCurrency'])
+    print(check)
+    if check == "pair not found":
+        u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
+        response= u.read()
+        data = json.loads(response)
+        data = data['rates']['' + session['desiredCurrency']]
+        updateCurrency(baseC, session['desiredCurrency'], str(data), "00")
+        return render_template("currency.html", rate = data, message = "from API")
+    else: return render_template("currency.html", rate = check, message = "from database")
 
-    u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
-    response= u.read()
-    data = json.loads(response)
-    data = data['rates']['' + session['desiredCurrency']]
-    # addCurrency(baseC, destinationC, data, timestamp)
-    return render_template("currency.html", rate = data)
 
 if __name__ == "__main__":
     app.debug = True
