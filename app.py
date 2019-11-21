@@ -164,11 +164,11 @@ def forecast():
     data = json.loads(response)
     week = genDic(data['daily']['data'])
     hours = genDic(data['hourly']['data'])
-    summaryD = data['hourly']['data']
+    summaryD = data['hourly']['summary']
     summaryW = data['daily']['summary']
+    print(summaryD + "\n" + summaryW)
     print(lat + "," + lon)
-    print(summaryD + "/n" + summaryW)
-    return summary
+    return summaryD + "<br>" + summaryW
 
 def genDic(dic):
     li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature','summary']
