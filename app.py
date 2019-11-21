@@ -36,6 +36,7 @@ def checkCurrency(base, destination):
     db.close()
     return "pair not found"
 
+
 def updateCurrency(base, destination, rate, timestamp):
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
@@ -137,7 +138,7 @@ def process_city():
 
     # print(geoloc['country'])
     country = country_info(geoloc['country']) # get the information of the desired country
-    session['desiredCurrency'] = country['currency'] # get the currency object for the country
+    session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
 
     # print(country['name'])
     # print(country['currency']['code'])
@@ -149,20 +150,22 @@ def process_city():
 
 @app.route("/currency")
 def money():
-    check = checkCurrency(baseC, session['desiredCurrency']['code'])
+    check = checkCurrency(baseC, session['desiredCurrency'])
     print(check)
     if check == "pair not found":
         u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
         response= u.read()
         data = json.loads(response)
-        data = data['rates'][session['desiredCurrency']['code']]
-        updateCurrency(baseC, session['desiredCurrency']['code'], str(data), "00")
+        data = data['rates'][session['desiredCurrency']]
+        updateCurrency(baseC, session['desiredCurrency'], str(data), "00")
         flash('Data received live from <em>Exchange Rate API</em>')
     else:
         print(check)
         data = check
         flash('Data retreived from cache')
     return render_template("currency.html", basecurrency = {}, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'])
+
+
 @app.route("/weather")
 def forecast():
     lat = str(session['geoloc']['lat'])
@@ -187,6 +190,7 @@ def genDic(dic):
             if (idx in dic[i]):
                 newSet[i][idx] = dic[i][idx]
     return newSet
+
 
 @app.route("/info")
 def testing():
