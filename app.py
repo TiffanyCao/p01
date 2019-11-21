@@ -102,7 +102,7 @@ restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
 def country_info(country): # country code, 2 letters (would work w a three letter code too)
     url = restcountries_request.format(country)
     u = urllib.request.urlopen(url)
-    print(urllib.request.getproxies()) # just curious
+    #print(urllib.request.getproxies()) # just curious
     response = u.read()
     data = json.loads(response)
 
@@ -116,14 +116,8 @@ def country_info(country): # country code, 2 letters (would work w a three lette
 
 @app.route("/")
 def landing_page():
-    flash('Previous search successfully cleared. (not actually tho, not yet anyways)')
-    # NOTE! this is my weird way of asking, when a user loads root (aka the search page) the old search should be cleared out right?
-    # in the way i did some navbar stuff i assumed that like, when on '/' no city is in session yet and so other pages should be disabled
-    # and i made the 'search' link change to 'new search' if you're viewing it on other pages ('/info','/weather',etc)
-    # -KV
-    
+    flash('example info message')
     flash('example error','error')
-    print(request.url)
     return render_template("welcome.html")
 
 
@@ -170,10 +164,14 @@ def forecast():
     data = json.loads(response)
     week = genDic(data['daily']['data'])
     hours = genDic(data['hourly']['data'])
-    return ""
+    summaryD = data['hourly']['data']
+    summaryW = data['daily']['summary']
+    print(lat + "," + lon)
+    print(summary)
+    return summary
 
 def genDic(dic):
-    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature']
+    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature','summary']
     newSet = []
     for i in range(0,len(dic)):
         newSet.append({})
