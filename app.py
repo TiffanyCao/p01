@@ -165,7 +165,6 @@ def forecast():
     week = genDic(data['daily']['data'])
     hours = genDic(data['hourly']['data'])
     return ""
-    return hours
 
 def genDic(dic):
     li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature']
