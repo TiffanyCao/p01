@@ -74,3 +74,7 @@ tiffanyC -- 2019-11-21 18:38
     - root.html now has a block section for css script which can be overwritten by each of its child HTML pages
     - wrote the route for information, which retrieves information on a city from the Wikipedia API and displays it on the information.html page
     - added a temporary carousel imaging slideshow on the information.html page for displaying images of the city (to be done using the Unsplash API)
+
+tiffanyC -- 2019-11-21 18:54
+    - fixed bug in currency route
+    - found a problem with the MapQuest API - might be too many API calls
