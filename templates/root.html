@@ -22,6 +22,42 @@ P01 -- root jinja template
     {% block header %}
 
     <div class="container-fluid header-container">
+      <nav class="navbar navbar-expand-lg navbar-light header-navbar">
+	<a class="navbar-brand" href="#">Ocean Getaways</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	  <span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+	  <ul class="navbar-nav mr-auto">
+	    <li class="nav-item {{'active' if request.path=='/'}}">
+	      <a class="nav-link" href="/">{{'New' if request.path!='/'}} Search</a>
+	    </li>
+	    <li class="nav-item"><span class="nav-link disabled">|</span></li>
+	    <li class="nav-item">
+	      <a class="nav-link
+			{{'active' if request.path=='/currency'}}
+			{{'disabled' if request.path=='/'}}
+		       " href="/currency">Currencies</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link
+			{{'active' if request.path=='/weather'}}
+			{{'disabled' if request.path=='/'}}
+		       " href="/weather">Weather</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link
+			{{'active' if request.path=='/info'}}
+			{{'disabled' if request.path=='/'}}
+		       " href="/info">Information</a>
+	    </li>
+	  </ul>
+	</div>
+      </nav>
+    </div>
+    
+    <!--
+    <div class="container-fluid header-container">
       <div class="row">
 	<div class="col-sm">
 	  <h3>Ocean Getaways</h3>
@@ -31,7 +67,7 @@ P01 -- root jinja template
 	</div>
       </div>
     </div>
-        
+    -->
     {% endblock %}
 
     <div class="container-fluid content-container">

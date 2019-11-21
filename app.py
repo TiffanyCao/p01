@@ -116,8 +116,14 @@ def country_info(country): # country code, 2 letters (would work w a three lette
 
 @app.route("/")
 def landing_page():
-    flash('example info message')
+    flash('Previous search successfully cleared. (not actually tho, not yet anyways)')
+    # NOTE! this is my weird way of asking, when a user loads root (aka the search page) the old search should be cleared out right?
+    # in the way i did some navbar stuff i assumed that like, when on '/' no city is in session yet and so other pages should be disabled
+    # and i made the 'search' link change to 'new search' if you're viewing it on other pages ('/info','/weather',etc)
+    # -KV
+    
     flash('example error','error')
+    print(request.url)
     return render_template("welcome.html")
 
 
