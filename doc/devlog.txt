@@ -53,3 +53,7 @@ tiffanyC -- 2019-11-19 20:25
 kiranV -- 2019-11-19 22:08
     - uploaded updated design doc, containing updates to list of APIs to be implemented, additional section for bootstrap FEF, and other minor changes
     *** these updates encompass changes made by all group memebers!!
+
+kiranV -- 2019-11-20 23:59
+    - created a bootstrap navbar in root jinja template, made it look pretty damn nice if i do say so myself
+    - made links on navbar change how they display depending on the state of the site: 'New Search' if search term exists already, disabled links when search term does not exist
