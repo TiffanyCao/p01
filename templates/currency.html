@@ -4,12 +4,29 @@
 {% block title %} Currency {% endblock %}
 
 {% block content %}
-  <body>
-    <h1> Currency Exchange</h1>
-    <br>
-    {{ rate }}
-    <br>
-    {{ message }}
-  </body>
-
+  <div class="row">
+    <h3 style="opacity: .6;">Currency Exchange</h3>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <div class="card currency-card">
+        <div class="card-body">
+          <p class="card-text">Base currency (based on your location): <strong>{{basecurrency.name}}</strong></p>
+          <p class="card-text">Local currency in {{cityname}}: <strong>{{targetcurrency.name}}</strong></p>
+          <p class="card-text">Exchange rate: 1{{basecurrency.symbol}} = {{rate}}{{targetcurrency.symbol}}</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="card calculator-card">
+        <div class="card-body">
+          <h5 class="card-title">Currency Calculator</h5>
+          <p class="card-text">{{basecurrency.code}} to {{targetcurrency.code}}</p>
+          <form action="/currency">
+            <input type="number" name="inputval" value=1 />
+            <input type="submit" name="submit" value="Convert" />
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

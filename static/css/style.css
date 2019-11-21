@@ -19,7 +19,6 @@ E: #e9ecf5 (blue-ish offwhite)
 
 body {
     background-color:#81d2c7;
-    color: #f0e7d8;
 }
 .header-container {
     background-color: #ccd6eb;
@@ -43,4 +42,14 @@ body {
     background-color:#f0e7d8;
     opacity:0.6;
     color: black;
+}
+.currency-card {
+  background-color:#f0e7d8;
+  opacity:0.6;
+  height: 100%;
+}
+.calculator-card {
+  background-color:#f0e7d8;
+  opacity:0.6;
+  height: 100%;
 }

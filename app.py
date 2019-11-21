@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 app.secret_key = "water"
 
-baseC = "USD"
+baseC = "NZD"
 destinationC = "EUR"
 DB_FILE = "data/travel.db"
 
@@ -102,7 +102,7 @@ restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
 def country_info(country): # country code, 2 letters (would work w a three letter code too)
     url = restcountries_request.format(country)
     u = urllib.request.urlopen(url)
-    print(urllib.request.getproxies()) # just curious
+    #print(urllib.request.getproxies()) # just curious
     response = u.read()
     data = json.loads(response)
 
@@ -123,7 +123,6 @@ def landing_page():
     # -KV
 
     flash('example error','error')
-    print(request.url)
     return render_template("welcome.html")
 
 
@@ -138,7 +137,7 @@ def process_city():
 
     # print(geoloc['country'])
     country = country_info(geoloc['country']) # get the information of the desired country
-    session['desiredCurrency'] = country['currency']['code'] # get the currency code for the country
+    session['desiredCurrency'] = country['currency'] # get the currency object for the country
 
     # print(country['name'])
     # print(country['currency']['code'])
@@ -150,17 +149,20 @@ def process_city():
 
 @app.route("/currency")
 def money():
-    check = checkCurrency(baseC, session['desiredCurrency'])
+    check = checkCurrency(baseC, session['desiredCurrency']['code'])
     print(check)
     if check == "pair not found":
         u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
         response= u.read()
         data = json.loads(response)
-        data = data['rates']['' + session['desiredCurrency']]
-        updateCurrency(baseC, session['desiredCurrency'], str(data), "00")
-        return render_template("currency.html", rate = data, message = "from API")
-    else: return render_template("currency.html", rate = check, message = "from database")
-
+        data = data['rates'][session['desiredCurrency']['code']]
+        updateCurrency(baseC, session['desiredCurrency']['code'], str(data), "00")
+        flash('Data received live from <em>Exchange Rate API</em>')
+    else:
+        print(check)
+        data = check
+        flash('Data retreived from cache')
+    return render_template("currency.html", basecurrency = {}, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'])
 @app.route("/weather")
 def forecast():
     lat = str(session['geoloc']['lat'])
@@ -170,10 +172,14 @@ def forecast():
     data = json.loads(response)
     week = genDic(data['daily']['data'])
     hours = genDic(data['hourly']['data'])
-    return ""
+    summaryD = data['hourly']['summary']
+    summaryW = data['daily']['summary']
+    print(summaryD + "\n" + summaryW)
+    print(lat + "," + lon)
+    return summaryD + "<br>" + summaryW
 
 def genDic(dic):
-    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature']
+    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature','summary']
     newSet = []
     for i in range(0,len(dic)):
         newSet.append({})
