@@ -162,30 +162,20 @@ def forecast():
     u = urllib.request.urlopen("https://api.darksky.net/forecast/2f2c21d2abb590bc642111165f1aa3f4/" + lat + "," + lon)
     response= u.read()
     data = json.loads(response)
-    #daily = data['daily']['data']
-    #hourly = data['hourly']['data']
-    #print(daily)
-    week = genWeek(data['daily']['data'])
-    hours = genHours(data['hourly']['data'])
+    week = genDic(data['daily']['data'])
+    hours = genDic(data['hourly']['data'])
     return ""
-
-def genWeek(dic):
-    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType']
-    week = []
-    for i in range(0,7):
-        week.append({})
-        for idx in li:
-            week[i][idx] = dic[i][idx]
-    return week
-
-def genHours(dic):
-    li = ['icon','temperature','windSpeed','precipProbability']
-    hours = []
-    for i in range(0,48):
-        hours.append({})
-        for idx in li:
-            hours[i][idx] = dic[i][idx]
     return hours
+
+def genDic(dic):
+    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature']
+    newSet = []
+    for i in range(0,len(dic)):
+        newSet.append({})
+        for idx in li:
+            if (idx in dic[i]):
+                newSet[i][idx] = dic[i][idx]
+    return newSet
 
 
 if __name__ == "__main__":
