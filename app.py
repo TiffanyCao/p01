@@ -167,7 +167,7 @@ def forecast():
     summaryD = data['hourly']['data']
     summaryW = data['daily']['summary']
     print(lat + "," + lon)
-    print(summary)
+    print(summaryD + "/n" + summaryW)
     return summary
 
 def genDic(dic):
