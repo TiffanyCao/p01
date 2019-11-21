@@ -68,3 +68,9 @@ tiffanyC -- 2019-11-20 12:01
 kiranV -- 2019-11-20 23:59
     - created a bootstrap navbar in root jinja template, made it look pretty damn nice if i do say so myself
     - made links on navbar change how they display depending on the state of the site: 'New Search' if search term exists already, disabled links when search term does not exist
+
+tiffanyC -- 2019-11-21 18:38
+    - extended currency.html from root.html
+    - root.html now has a block section for css script which can be overwritten by each of its child HTML pages
+    - wrote the route for information, which retrieves information on a city from the Wikipedia API and displays it on the information.html page
+    - added a temporary carousel imaging slideshow on the information.html page for displaying images of the city (to be done using the Unsplash API)
