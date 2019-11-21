@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 app.secret_key = "water"
 
-baseC = "USD"
+baseC = "NZD"
 destinationC = "EUR"
 DB_FILE = "data/travel.db"
 
@@ -121,7 +121,7 @@ def landing_page():
     # in the way i did some navbar stuff i assumed that like, when on '/' no city is in session yet and so other pages should be disabled
     # and i made the 'search' link change to 'new search' if you're viewing it on other pages ('/info','/weather',etc)
     # -KV
-    
+
     flash('example error','error')
     print(request.url)
     return render_template("welcome.html")
@@ -138,7 +138,7 @@ def process_city():
 
     # print(geoloc['country'])
     country = country_info(geoloc['country']) # get the information of the desired country
-    session['desiredCurrency'] = country['currency']['code'] # get the currency code for the country
+    session['desiredCurrency'] = country['currency'] # get the currency object for the country
 
     # print(country['name'])
     # print(country['currency']['code'])
@@ -150,17 +150,20 @@ def process_city():
 
 @app.route("/currency")
 def money():
-    check = checkCurrency(baseC, session['desiredCurrency'])
+    check = checkCurrency(baseC, session['desiredCurrency']['code'])
     print(check)
     if check == "pair not found":
         u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
         response= u.read()
         data = json.loads(response)
-        data = data['rates']['' + session['desiredCurrency']]
-        updateCurrency(baseC, session['desiredCurrency'], str(data), "00")
-        return render_template("currency.html", rate = data, message = "from API")
-    else: return render_template("currency.html", rate = check, message = "from database")
-
+        data = data['rates'][session['desiredCurrency']['code']]
+        updateCurrency(baseC, session['desiredCurrency']['code'], str(data), "00")
+        flash('Data received live from <em>Exchange Rate API</em>')
+    else:
+        print(check)
+        data = check
+        flash('Data retreived from cache')
+    return render_template("currency.html", basecurrency = {}, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'])
 @app.route("/weather")
 def forecast():
     lat = str(session['geoloc']['lat'])
