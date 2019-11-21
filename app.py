@@ -121,7 +121,7 @@ def landing_page():
     # in the way i did some navbar stuff i assumed that like, when on '/' no city is in session yet and so other pages should be disabled
     # and i made the 'search' link change to 'new search' if you're viewing it on other pages ('/info','/weather',etc)
     # -KV
-    
+
     flash('example error','error')
     print(request.url)
     return render_template("welcome.html")
@@ -181,6 +181,23 @@ def genDic(dic):
             if (idx in dic[i]):
                 newSet[i][idx] = dic[i][idx]
     return newSet
+
+@app.route("/info")
+def testing():
+    city = session['destination'].replace(' ','%20')
+    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + city + "&utf8=&format=json")
+    response = u.read()
+    data = json.loads(response)
+    page = data['query']['search'][0]
+    page = page['pageid']
+    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + city + "&format=json")
+    response = u.read()
+    data = json.loads(response)
+    data = data['query']['pages'][str(page)]['extract']
+    data = data.split('.')
+    if len(data) > 10:
+        data = data[0:9]
+    return render_template("information.html", city = session['destination'], info = data, length = len(data))
 
 
 if __name__ == "__main__":
