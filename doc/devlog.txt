@@ -52,7 +52,18 @@ tiffanyC -- 2019-11-19 20:25
 
 kiranV -- 2019-11-19 22:08
     - uploaded updated design doc, containing updates to list of APIs to be implemented, additional section for bootstrap FEF, and other minor changes
-    *** these updates encompass changes made by all group memebers!!
+    *** these updates encompass changes made by all group members!!
+
+tiffanyC -- 2019-11-20 12:01
+     - created database for currency, where new pairs of currencies are stored along with their timestamp
+     - fixed currency functions
+     - rewrote currency route to use the currency functions
+     - currency route tested and it works
+
+ clementC -- 2019-11-20 21:47
+     - created a weather route
+     - takes the longitude and latitude from the session variable taken from the city route
+     - route retrieves weather data from Dark Sky API and stores all the information in a dictionary
 
 kiranV -- 2019-11-20 23:59
     - created a bootstrap navbar in root jinja template, made it look pretty damn nice if i do say so myself

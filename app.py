@@ -102,7 +102,7 @@ restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
 def country_info(country): # country code, 2 letters (would work w a three letter code too)
     url = restcountries_request.format(country)
     u = urllib.request.urlopen(url)
-    print(urllib.request.getproxies()) # just curious
+    #print(urllib.request.getproxies()) # just curious
     response = u.read()
     data = json.loads(response)
 
@@ -123,7 +123,6 @@ def landing_page():
     # -KV
 
     flash('example error','error')
-    print(request.url)
     return render_template("welcome.html")
 
 
@@ -173,10 +172,14 @@ def forecast():
     data = json.loads(response)
     week = genDic(data['daily']['data'])
     hours = genDic(data['hourly']['data'])
-    return ""
+    summaryD = data['hourly']['summary']
+    summaryW = data['daily']['summary']
+    print(summaryD + "\n" + summaryW)
+    print(lat + "," + lon)
+    return summaryD + "<br>" + summaryW
 
 def genDic(dic):
-    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature']
+    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature','summary']
     newSet = []
     for i in range(0,len(dic)):
         newSet.append({})
