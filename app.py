@@ -179,7 +179,7 @@ def genWeek(dic):
     return week
 
 def genHours(dic):
-    li = []
+    li = ['icon','temperature','windSpeed','precipProbability']
     hours = []
     for i in range(0,48):
         hours.append({})
