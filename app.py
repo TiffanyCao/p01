@@ -155,6 +155,38 @@ def money():
         return render_template("currency.html", rate = data, message = "from API")
     else: return render_template("currency.html", rate = check, message = "from database")
 
+@app.route("/weather")
+def forecast():
+    lat = str(session['geoloc']['lat'])
+    lon = str(session['geoloc']['lon'])
+    u = urllib.request.urlopen("https://api.darksky.net/forecast/2f2c21d2abb590bc642111165f1aa3f4/" + lat + "," + lon)
+    response= u.read()
+    data = json.loads(response)
+    #daily = data['daily']['data']
+    #hourly = data['hourly']['data']
+    #print(daily)
+    week = genWeek(data['daily']['data'])
+    hours = genHours(data['hourly']['data'])
+    return ""
+
+def genWeek(dic):
+    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType']
+    week = []
+    for i in range(0,7):
+        week.append({})
+        for idx in li:
+            week[i][idx] = dic[i][idx]
+    return week
+
+def genHours(dic):
+    li = []
+    hours = []
+    for i in range(0,48):
+        hours.append({})
+        for idx in li:
+            hours[i][idx] = dic[i][idx]
+    return hours
+
 
 if __name__ == "__main__":
     app.debug = True
