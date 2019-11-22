@@ -35,6 +35,12 @@ P01 -- root jinja template
 	      <a class="nav-link" href="/">{{'New' if request.path!='/'}} Search</a>
 	    </li>
 	    <li class="nav-item"><span class="nav-link disabled">|</span></li>
+      <li class="nav-item">
+        <a class="nav-link
+      {{'active' if request.path=='/info'}}
+      {{'disabled' if request.path=='/'}}
+           " href="/info">Information</a>
+      </li>
 	    <li class="nav-item">
 	      <a class="nav-link
 			{{'active' if request.path=='/currency'}}
@@ -46,12 +52,6 @@ P01 -- root jinja template
 			{{'active' if request.path=='/weather'}}
 			{{'disabled' if request.path=='/'}}
 		       " href="/weather">Weather</a>
-	    </li>
-	    <li class="nav-item">
-	      <a class="nav-link
-			{{'active' if request.path=='/info'}}
-			{{'disabled' if request.path=='/'}}
-		       " href="/info">Information</a>
 	    </li>
 	  </ul>
 	</div>
