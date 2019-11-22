@@ -24,7 +24,21 @@
       {% for key in hours %}
         {{ key }}: {{ hours[key] }}
         {% if key == "temperature" or key == "temperatureLow" or key == "temperatureHigh" %}
-        C
+          {% if unit == "us" %}
+           F
+          {% endif %}
+          {% if unit == "si" %}
+           C
+          {% endif %}
+        {% endif %}
+
+        {% if key == "windSpeed" %}
+          {% if unit == "us" %}
+           mph
+          {% endif %}
+          {% if unit == "si" %}
+           meters per second
+          {% endif %}
         {% endif %}
         <br>
       {% endfor %}
@@ -34,11 +48,30 @@
       <h4> Weekly Forecast: </h4><br>
       <strong> {{ summaryW }} </strong><br><br>
       {% for i in range(0, length) %}
-        <h5> {{ i + 1 }} day(s) after today </h5>
+        {% if i == 0 %}
+        <h5> Today </h5>
+        {%  endif %}
+        {% if i != 0 %}
+        <h5> {{ i }} day(s) after today </h5>
+        {%  endif %}
         {% for key in week[i] %}
           {{ key }}: {{ week[i][key] }}
           {% if key == "temperature" or key == "temperatureLow" or key == "temperatureHigh" %}
-          C
+            {% if unit == "us" %}
+             F
+            {% endif %}
+            {% if unit == "si" %}
+             C
+            {% endif %}
+          {% endif %}
+
+          {% if key == "windSpeed" %}
+            {% if unit == "us" %}
+             mph
+            {% endif %}
+            {% if unit == "si" %}
+             meters per second
+            {% endif %}
           {% endif %}
           <br>
         {% endfor %}

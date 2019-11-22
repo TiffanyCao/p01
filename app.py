@@ -189,22 +189,19 @@ def forecast():
     summaryD = data['hourly']['summary']
     summaryW = data['daily']['summary']
     # print(summaryD + "\n" + summaryW)
-    # print(lat + "," + lon)
+    print(lat + "," + lon)
+    units = data['flags']['units']
     # print(week[0])
     # print(hours[0])
     url = getUrl(data['currently']['icon'])
     # print(data['hourly']['data'])
-
-    print(now)
-    return render_template("weather.html", cityname = session['destination'], summaryD = summaryD, summaryW = summaryW, week = week, length = len(week), hours = now, image = url)
+    return render_template("weather.html", cityname = session['destination'], summaryD = summaryD, summaryW = summaryW, week = week, length = len(week), hours = now, image = url, unit = units)
 
 def genDicNow(dic):
     li = ['icon','temperatureHigh','temperatureLow', 'temperature','windSpeed', 'precipIntensity', 'precipProbability', 'precipType', 'cloudCover', 'humidity', 'summary']
     newSet = {}
     for key in dic:
         for idx in li:
-            print("This here")
-            print(idx)
             if (key == idx):
                 newSet[idx] = dic[idx]
     return newSet
