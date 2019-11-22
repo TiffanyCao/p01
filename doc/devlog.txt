@@ -78,3 +78,9 @@ tiffanyC -- 2019-11-21 18:38
 tiffanyC -- 2019-11-21 18:54
     - fixed bug in currency route
     - found a problem with the MapQuest API - might be too many API calls
+
+tiffanyC -- 2019-11-21 19:40
+    - resolved problem with MapQuest API - had something to due with faulty WiFi
+    - fixed currency.html to display the currencies
+    - changed order of navigation bar in root.html
+    - made the landing page after search request be the information route 
