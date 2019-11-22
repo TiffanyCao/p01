@@ -93,3 +93,21 @@ tiffanyC -- 2019-11-21 20:06
 tiffanyC -- 2019-11-21 22:00
     - wrote weather.html using Clement's weather route and function
     - weather.html retrieves weather image from dictionary in app
+
+tiffanyC -- 2019-11-21 22:35
+    - units were added to weather page
+
+tiffanyC -- 2019-11-21 23:13
+    - Response to Egoless Programming:
+      This excerpt was a very enlightening and thought-provoking read. It essentially discussed the importance of egoless programming, which is when programmers get into the
+      habit of working together on a project, or at least, giving the code they've written to others for debugging. This is more than just a way of coding, but a mentality.
+      Programmers must get rid of the mindset that the code they write is "theirs" and that any criticism of their code is a personal attack on their capabilities. The story
+      about Bill G. was very interesting, and the fact that he responded to his many bugs with humor shows his light-hearted attitude and ability to take criticism effectively.
+      Egoless programming seems to have many benefits: you become a better programmer, a more mindful team member, and your code has better adaptability, clarity, efficiency, and more.
+    -What we can do:
+      - We can start programming in pairs, such as having two people write the code for their parts of the project, and then have them swap codes to look for bugs. This way, both
+        people will be well-versed in the two parts of the project, so that if one person is absent, the other has the knowledge.
+      - We can implement a process where we help each other look for bugs before committing; this would reduce the number of times we push bad code and end up having to fix it later.
+      - We should test everything, and have a partner test everything, before pushing.
+      - We should have open communication; maybe have a discussion every night about where everyone is at with their part of the project and what issues they may have, so that we
+        can work collectively to figure out the bugs.
