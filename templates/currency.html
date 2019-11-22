@@ -23,10 +23,18 @@
           <h5 class="card-title">Currency Calculator</h5>
           <p class="card-text">{{basecurrency}} to {{targetcurrency}}</p>
           <form action="/currency">
-            <input type="number" name="inputval" value=1 />
+            <input type="number" name="inputval" value= {{money}} />
             <input type="submit" name="submit" value="Convert" />
         </div>
       </div>
     </div>
+  </div>
+  <br>
+  <div class="row">
+    <h4> Conversion: <strong> {{ conversion }}</strong>
+    {% if conversion != "Please input a value." %}
+      <strong> {{ targetcurrency }} </strong>
+    {% endif %}
+  </h4>
   </div>
 {% endblock %}
