@@ -163,7 +163,13 @@ def money():
         print(check)
         data = check
         flash('Data retreived from cache')
-    return render_template("currency.html", basecurrency = baseC, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'])
+    input = request.args.get("inputval")
+    if input is None:
+        input = 1
+        outcome = "Please input a value."
+    else:
+        outcome = "" + str(float(input) * data)
+    return render_template("currency.html", basecurrency = baseC, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome)
 
 
 @app.route("/weather")
