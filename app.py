@@ -3,7 +3,7 @@
 # P01 -- flask app, ocean getaways
 # 2019-11-18
 
-from flask import Flask, render_template, request, session, flash
+from flask import Flask, render_template, request, session, flash, redirect, url_for
 import json
 import urllib
 import sqlite3
@@ -145,7 +145,7 @@ def process_city():
 
     flash('Currency symbol: {}'.format(country['currency']['code']))
 
-    return render_template("root.html") # temporary!
+    return redirect(url_for("information")) # temporary!
 
 
 @app.route("/currency")
@@ -158,12 +158,12 @@ def money():
         data = json.loads(response)
         data = data['rates'][session['desiredCurrency']]
         updateCurrency(baseC, session['desiredCurrency'], str(data), "00")
-        flash('Data received live from <em>Exchange Rate API</em>')
+        flash('Data received live from <em>Currency Exchange Rate API</em>')
     else:
         print(check)
         data = check
         flash('Data retreived from cache')
-    return render_template("currency.html", basecurrency = {}, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'])
+    return render_template("currency.html", basecurrency = baseC, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'])
 
 
 @app.route("/weather")
@@ -193,7 +193,7 @@ def genDic(dic):
 
 
 @app.route("/info")
-def testing():
+def information():
     city = session['destination'].replace(' ','%20')
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + city + "&utf8=&format=json")
     response = u.read()
