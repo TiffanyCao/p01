@@ -71,8 +71,11 @@ for line in content:
     line = line.strip() #removes \n
     line = line.split(",") #if line does not contain quotes, split by comma
     dict[line[0]] = (line[1]) #key value pair
-print(dict) #testing results
+# print(dict) #testing results
 file.close()
+
+def getUrl(weather):
+    return dict[weather]
 
 
 # =================== Part 2: API Accessing Functions ===================
@@ -95,6 +98,8 @@ def geolocate(city):
     out['lat'] = result['latLng']['lat']
     out['lon'] = result['latLng']['lng']
     out['mapurl'] = result['mapUrl']
+    session['desiredLat'] = out['lat']
+    session['desiredLon'] = out['lon']
     return out
 
 
@@ -158,7 +163,7 @@ def money():
         data = json.loads(response)
         data = data['rates'][session['desiredCurrency']]
         updateCurrency(baseC, session['desiredCurrency'], str(data), "00")
-        flash('Data received live from <em>Currency Exchange Rate API</em>')
+        flash('Data received live from Currency Exchange Rate API')
     else:
         print(check)
         data = check
@@ -174,21 +179,38 @@ def money():
 
 @app.route("/weather")
 def forecast():
-    lat = str(session['geoloc']['lat'])
-    lon = str(session['geoloc']['lon'])
+    lat = str(session['desiredLat'])
+    lon = str(session['desiredLon'])
     u = urllib.request.urlopen("https://api.darksky.net/forecast/2f2c21d2abb590bc642111165f1aa3f4/" + lat + "," + lon)
     response= u.read()
     data = json.loads(response)
-    week = genDic(data['daily']['data'])
-    hours = genDic(data['hourly']['data'])
+    week = genDicWeek(data['daily']['data'])
+    now = genDicNow(data['currently'])
     summaryD = data['hourly']['summary']
     summaryW = data['daily']['summary']
-    print(summaryD + "\n" + summaryW)
-    print(lat + "," + lon)
-    return summaryD + "<br>" + summaryW
+    # print(summaryD + "\n" + summaryW)
+    # print(lat + "," + lon)
+    # print(week[0])
+    # print(hours[0])
+    url = getUrl(data['currently']['icon'])
+    # print(data['hourly']['data'])
 
-def genDic(dic):
-    li = ['icon','temperatureHigh','temperatureLow','windSpeed','precipProbability','precipType','temperature','summary']
+    print(now)
+    return render_template("weather.html", cityname = session['destination'], summaryD = summaryD, summaryW = summaryW, week = week, length = len(week), hours = now, image = url)
+
+def genDicNow(dic):
+    li = ['icon','temperatureHigh','temperatureLow', 'temperature','windSpeed', 'precipIntensity', 'precipProbability', 'precipType', 'cloudCover', 'humidity', 'summary']
+    newSet = {}
+    for key in dic:
+        for idx in li:
+            print("This here")
+            print(idx)
+            if (key == idx):
+                newSet[idx] = dic[idx]
+    return newSet
+
+def genDicWeek(dic):
+    li = ['icon','temperatureHigh','temperatureLow', 'temperature','windSpeed', 'precipIntensity', 'precipProbability', 'precipType', 'cloudCover', 'humidity', 'summary']
     newSet = []
     for i in range(0,len(dic)):
         newSet.append({})
