@@ -83,4 +83,9 @@ tiffanyC -- 2019-11-21 19:40
     - resolved problem with MapQuest API - had something to due with faulty WiFi
     - fixed currency.html to display the currencies
     - changed order of navigation bar in root.html
-    - made the landing page after search request be the information route 
+    - made the landing page after search request be the information route
+
+tiffanyC -- 2019-11-21 20:06
+    - wrote currency route function to accommodate money conversions. When the client inputs a certain amount of money, the currency page refreshes to show to the monetary
+      equivalent in the desired currency
+    - fixed currency.html to display the money conversions
