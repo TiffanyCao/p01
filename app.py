@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 app.secret_key = 'water'
 
-keyfile = open('doc/keys.json')
+keyfile = open('keys.json')
 keys = json.load(keyfile)
 
 baseC = "NZD"
@@ -131,7 +131,9 @@ def landing_page():
     # and i made the 'search' link change to 'new search' if you're viewing it on other pages ('/info','/weather',etc)
     # -KV
 
-    flash('example error','error')
+    # alert users of missing keys if they are missing
+    for service in keys:
+        flash('key for {} is missing: see README.md for instructions on procuring a key and installing it to the app.'.format(service),'error')
     return render_template("welcome.html")
 
 
