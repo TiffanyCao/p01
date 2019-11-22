@@ -133,7 +133,8 @@ def landing_page():
 
     # alert users of missing keys if they are missing
     for service in keys:
-        flash('key for {} is missing: see README.md for instructions on procuring a key and installing it to the app.'.format(service),'error')
+        if keys[service] == 'YOUR_API_KEY_HERE':
+            flash('key for {} is missing: see README.md for instructions on procuring a key and installing it to the app.'.format(service),'error')
     return render_template("welcome.html")
 
 
