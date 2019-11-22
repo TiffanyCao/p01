@@ -89,3 +89,7 @@ tiffanyC -- 2019-11-21 20:06
     - wrote currency route function to accommodate money conversions. When the client inputs a certain amount of money, the currency page refreshes to show to the monetary
       equivalent in the desired currency
     - fixed currency.html to display the money conversions
+
+tiffanyC -- 2019-11-21 22:00
+    - wrote weather.html using Clement's weather route and function
+    - weather.html retrieves weather image from dictionary in app
