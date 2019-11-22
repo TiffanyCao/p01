@@ -230,7 +230,8 @@ def information():
     data = json.loads(response)
     page = data['query']['search'][0]
     page = page['pageid']
-    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + city + "&format=json")
+    title = data['query']['search'][0]['title']
+    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title + "&format=json")
     response = u.read()
     data = json.loads(response)
     data = data['query']['pages'][str(page)]['extract']
