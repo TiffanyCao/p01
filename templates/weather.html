@@ -1,0 +1,55 @@
+{% extends "root.html" %}
+<!DOCTYPE html>
+
+{% block title %} Weather {% endblock %}
+<!-- {% block script %}
+  <style>
+    .image{
+      padding-right: 50px;
+    }
+  </style>
+{% endblock %} -->
+{% block content %}
+  <div class="row">
+    <h3 style="opacity: .6;"> Weather in {{ cityname }}</h3>
+  </div>
+  <br>
+  <div class = "column">
+    <div class = "text" style="padding: 10px; background-color: aliceblue;">
+      <h4> Today's Forecast: </h4><br>
+      <strong> {{ summaryD }} </strong><br><br>
+      <div class = "row" style="padding-left:200px;">
+        <img src="{{ image }}" class="img-rounded" alt="Weather" width = "300px;" height = "300px;">
+      </div>
+      {% for key in hours %}
+        {{ key }}: {{ hours[key] }}
+        {% if key == "temperature" or key == "temperatureLow" or key == "temperatureHigh" %}
+        C
+        {% endif %}
+        <br>
+      {% endfor %}
+      <br>
+    </div>
+    <div class = "text" style="padding: 10px; background-color: lightblue;">
+      <h4> Weekly Forecast: </h4><br>
+      <strong> {{ summaryW }} </strong><br><br>
+      {% for i in range(0, length) %}
+        <h5> {{ i + 1 }} day(s) after today </h5>
+        {% for key in week[i] %}
+          {{ key }}: {{ week[i][key] }}
+          {% if key == "temperature" or key == "temperatureLow" or key == "temperatureHigh" %}
+          C
+          {% endif %}
+          <br>
+        {% endfor %}
+        <br>
+      {% endfor %}
+      <br>
+      <br>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+{% endblock %}

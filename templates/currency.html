@@ -13,7 +13,7 @@
         <div class="card-body">
           <p class="card-text">Base Currency (based on your location): <strong>{{basecurrency}}</strong></p>
           <p class="card-text">Local Currency in {{cityname}}: <strong>{{targetcurrency}}</strong></p>
-          <p class="card-text">Exchange Rate: 1 {{basecurrency}} = {{rate}} {{targetcurrency}}</strong></p>
+          <p class="card-text">Exchange Rate: <strong>1 {{basecurrency}} = {{rate}} {{targetcurrency}}</strong></p>
         </div>
       </div>
     </div>
@@ -21,7 +21,7 @@
       <div class="card calculator-card">
         <div class="card-body">
           <h5 class="card-title">Currency Calculator</h5>
-          <p class="card-text">{{basecurrency}} to {{targetcurrency}}</p>
+          <p class="card-text"><strong>{{basecurrency}} to {{targetcurrency}}</strong></p>
           <form action="/currency">
             <input type="number" name="inputval" value= {{money}} />
             <input type="submit" name="submit" value="Convert" />
