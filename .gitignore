@@ -1,5 +1,6 @@
 # file containing key installations
-doc/keys.json
+
+keys.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

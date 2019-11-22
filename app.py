@@ -10,7 +10,10 @@ import sqlite3
 
 app = Flask(__name__)
 
-app.secret_key = "water"
+app.secret_key = 'water'
+
+keyfile = open('doc/keys.json')
+keys = json.load(keyfile)
 
 baseC = "NZD"
 destinationC = "EUR"
@@ -80,7 +83,7 @@ def getUrl(weather):
 
 # =================== Part 2: API Accessing Functions ===================
 
-mapquest_key = "towBT1Gfo92PG6GjBcJs7NoIswGUtsaH"
+mapquest_key = keys['mapquest']
 mapquest_request = "http://open.mapquestapi.com/geocoding/v1/address?key={}&location={}"
 
 def geolocate(city):
@@ -181,7 +184,7 @@ def money():
 def forecast():
     lat = str(session['desiredLat'])
     lon = str(session['desiredLon'])
-    u = urllib.request.urlopen("https://api.darksky.net/forecast/2f2c21d2abb590bc642111165f1aa3f4/" + lat + "," + lon)
+    u = urllib.request.urlopen("https://api.darksky.net/forecast/" + keys['darksky'] + "/" + lat + "," + lon)
     response= u.read()
     data = json.loads(response)
     week = genDicWeek(data['daily']['data'])
