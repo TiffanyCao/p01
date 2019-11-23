@@ -28,7 +28,6 @@ python3 -m venv <virtual_environment_name>
 and then resume installing normally.
 
 *Procure keys for the Mapquest developer API and the Dark Sky Weather API before proceeding. When you have successfully procured keys, replace the dummy text in keys.json with your request keys.*
-
 **See below for instructions on key installation!**
 
 The app can be launched when keys have successfully been procured with:
@@ -38,8 +37,16 @@ python3 app.py
 
 #### OBTAINING KEYS
 
+None of the below keys require payment information for the beginning of usage. The only necessary resource is an email address.
+
 ##### MapQuest Developer API - Geolocation
 1. Register for an account on [MapQuest Developer](https://developer.mapquest.com/plan_purchase/steps/business_edition/business_edition_free/register)
   - While you do have to fill out all fields, none matter other than your email address.
 2. The landing page post-signup will contain an app titled 'My Application' already created; open the card for the app, and copy the *consumer key*
-3. open the `keys.json` file in your repository, and paste the key in place of `YOUR_API_KEY_HERE` in the 'mapquest' field.
+3. Open the `keys.json` file in your repository, and paste the key in place of `YOUR_API_KEY_HERE` in the 'mapquest' field
+
+##### Dark Sky API - Weather Forecast
+1. Register an account on [Dark Sky API](https://darksky.net/dev/register)
+  - the only required fields are an email and password
+2. Confirm your email address by clicking the link sent to the email address entered, and then log in with your new credentials
+3. Copy the secret key displayed on the landing page post-login, and paste it into `keys.json` in place of `YOUR_API_KEY_HERE` the 'darksky' field
