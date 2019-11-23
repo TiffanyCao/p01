@@ -53,6 +53,12 @@ P01 -- root jinja template
 			{{'disabled' if request.path=='/'}}
 		       " href="/weather">Weather</a>
 	    </li>
+      <li class="nav-item">
+        <a class="nav-link
+      {{'active' if request.path=='/map'}}
+      {{'disabled' if request.path=='/'}}
+           " href="/map">Map</a>
+      </li>
 	  </ul>
 	</div>
       </nav>
