@@ -1,12 +1,25 @@
+{% extends "root.html" %}
+
 <!DOCTYPE HTML>
-<html>
-  <head>
-  </head>
-  <body>
-    <img src = {{pic}}>
-    <form action = "/map">
-      <input type = "hidden" name = "oldZoom" value = {{newZoom}}>
-      <input type = "submit" name = "zoom" value = "Zoom In">
-      <input type = "submit" name = "zoom" value = "Zoom Out">
-  </body>
-</html>
+{% block title %} Map {% endblock %}
+
+{% block content %}
+  <h1 style = "color: #F4EF88;"> Map of {{ city }} </h1>
+  <br>
+  <br>
+  <div class = "col">
+    <div class = "image" style = "text-align: center;">
+      <img src = {{pic}} style = "margin-left: auto; margin-right: auto;">
+    </div>
+    <br>
+    <div class = "form" style = "text-align: center;">
+      <form action = "/map">
+        <input type = "hidden" name = "oldZoom" value = {{newZoom}}>
+        <input type = "submit" name = "zoom" value = "Zoom In">
+        <input type = "submit" name = "zoom" value = "Zoom Out">
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+{% endblock %}
