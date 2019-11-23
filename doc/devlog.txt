@@ -111,3 +111,17 @@ tiffanyC -- 2019-11-21 23:13
       - We should test everything, and have a partner test everything, before pushing.
       - We should have open communication; maybe have a discussion every night about where everyone is at with their part of the project and what issues they may have, so that we
         can work collectively to figure out the bugs.
+
+kiranV -- 2019-11-22 13:34
+    - Created a bootstrap-using template to replace the former currency.html template, using containers, rows, cols, and cards to nicely layout
+    - Initialized a (currently inactive) form to calculate the value of a certain amount of exchanged currency
+
+kiranV -- 2019-11-23 06:50
+    - Removed all references to our procured keys from app.py
+    - Made all former references to key strings into references to a json file, keys.json, where an end user might be able to install their own procured keys
+    - Created default keys.json file to be included in repo, with non-keys where sensitive information might end up ("YOUR_API_KEY_HERE")
+    ** in the team discord server, there is a keys.json file, which can be downloaded to replace the default file and install keys belonging to boneless ice
+
+kiranV -- 2019-11-23 23:49
+    - Added error handling for low granularity results from the MapQuest API (typically arising from a user typo); error is displayed as a flashed message to the user
+    - Corrected a bug regarding spaces in URLs from the wikipedia access function (might only be a problem locally on my computer)
