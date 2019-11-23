@@ -101,7 +101,7 @@ def geolocate(city):
     response = u.read()
     data = json.loads(response)
     if data['info']['statuscode'] != 0:
-        print("error arose while using Mapquest Geolocator")
+        print("Error arose while using MapQuest Geolocator")
         raise ValueError('Status code of {} while accessing Mapquest Geolocator: {}',data['info']['statuscode'],data['info']['messages'][0])
     result = data['results'][0]['locations'][0]
     if result['geocodeQuality'] == "COUNTRY":
@@ -153,7 +153,7 @@ def landing_page():
     return render_template("welcome.html")
 
 
-# processes input from the Search box and redirects to
+# processes input from the Search box and redirects to information route
 @app.route("/city")
 def process_city():
     if request.args.get('city_name') is None:
@@ -179,23 +179,24 @@ def process_city():
     # print(country['name'])
     # print(country['currency']['code'])
 
-
+# uses Currency API to obtain currency exchange rates based on session['destination']
 @app.route("/currency")
 def money():
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
-    check = checkCurrency(baseC, session['desiredCurrency'])
+    check = checkCurrency(baseC, session['desiredCurrency']) # check if the base-destination pair is in database
     print(check)
-    if check == "need update" or check == "pair not found":
+    if check == "need update" or check == "pair not found": # if the rate doesn't exist or needs to be updated
         u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
         response= u.read()
         data = json.loads(response)
         data = data['rates'][session['desiredCurrency']]
         updateCurrency(baseC, session['desiredCurrency'], str(data), str(date.today()))
         flash('Data received live from Currency Exchange Rate API')
-    else:
+    else: # otherwise, return the rate
         data = check
         flash('Data retreived from cache')
+    # calculator functioning
     input = request.args.get("inputval")
     if input is None:
         input = 1
@@ -205,28 +206,30 @@ def money():
     return render_template("currency.html", basecurrency = baseC, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome)
 
 
+# uses Dark Sky API and the city's coordinates to obtain weather information
 @app.route("/weather")
 def forecast():
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
-    lat = str(session['desiredLat'])
+    lat = str(session['desiredLat']) # get the coordinates
     lon = str(session['desiredLon'])
     u = urllib.request.urlopen("https://api.darksky.net/forecast/" + keys['darksky'] + "/" + lat + "," + lon)
     response= u.read()
     data = json.loads(response)
-    week = genDicWeek(data['daily']['data'])
-    now = genDicNow(data['currently'])
+    week = genDicWeek(data['daily']['data']) # get data for the week's forecast
+    now = genDicNow(data['currently']) # get data for current forecast
     summaryD = data['hourly']['summary']
     summaryW = data['daily']['summary']
     # print(summaryD + "\n" + summaryW)
     print(lat + "," + lon)
-    units = data['flags']['units']
+    units = data['flags']['units'] # find the units
     # print(week[0])
     # print(hours[0])
-    url = getUrl(data['currently']['icon'])
+    url = getUrl(data['currently']['icon']) # get the corresponding image icon from dictionary
     # print(data['hourly']['data'])
     return render_template("weather.html", cityname = session['destination'], summaryD = summaryD, summaryW = summaryW, week = week, length = len(week), hours = now, image = url, unit = units)
 
+# nice packaging of API info
 def genDicNow(dic):
     li = ['icon','temperatureHigh','temperatureLow', 'temperature','windSpeed', 'precipIntensity', 'precipProbability', 'precipType', 'cloudCover', 'humidity', 'summary']
     newSet = {}
@@ -236,6 +239,7 @@ def genDicNow(dic):
                 newSet[idx] = dic[idx]
     return newSet
 
+# nice packaging of API info
 def genDicWeek(dic):
     li = ['icon','temperatureHigh','temperatureLow', 'temperature','windSpeed', 'precipIntensity', 'precipProbability', 'precipType', 'cloudCover', 'humidity', 'summary']
     newSet = []
@@ -247,6 +251,7 @@ def genDicWeek(dic):
     return newSet
 
 
+# uses Wikipedia API to get text from the Wiki page on the city
 @app.route("/info")
 def information():
     if session.get('destination') is None:
@@ -256,22 +261,22 @@ def information():
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json".format(city_encoded))
     response = u.read()
     data = json.loads(response)
-    page = data['query']['search'][0]
+    page = data['query']['search'][0] # get page ID of the Wikipedia page
     page = page['pageid']
-    title = data['query']['search'][0]['title']
+    title = data['query']['search'][0]['title'] # get Wikipedia page title
     session['destination'] = title
     title_encoded = title.replace(' ','%20')
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title_encoded + "&format=json")
     response = u.read()
     data = json.loads(response)
     data = data['query']['pages'][str(page)]['extract']
-    data = data.split('.')
-    if len(data) > 10:
+    data = data.split('. ')
+    if len(data) > 10: # cut down length of text
         data = data[0:9]
     return render_template("information.html", city = session['destination'], info = data, length = len(data))
 
 
-
+# uses the map URL from MapQuest API to get the map
 @app.route("/map")
 def displayMap():
     if session.get('destination') is None:
@@ -296,7 +301,7 @@ def displayMap():
             print("zoom out")
             if (int(oldZoom) > 0):
                 zAdjust -=1
-
+    # process zooming of map
     newZoom = oldZoom + zAdjust
     print(str(oldZoom) + "," + str(newZoom))
     zoom[0] = str(newZoom)
