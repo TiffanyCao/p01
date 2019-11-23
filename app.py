@@ -258,27 +258,31 @@ def displayMap():
     zAdjust = 0
     li = session['mapUrl'].split("=")
     zoom = li[6].split("&")
-    print(str(li) + "\n"  +str(zoom))
+    if ("oldZoom" in request.args):
+        if (request.args['oldZoom'] != "None"):
+            oldZoom = int(request.args['oldZoom'])
+            newZoom = oldZoom + zAdjust
+        else:
+            oldZoom = 12
+    else:
+        oldZoom = 12
     if ('zoom' in request.args):
         if (request.args['zoom'] == "Zoom In"):
             print("zoom in")
-            if (int(zoom[0]) < 19 ):
+            if (int(oldZoom) < 19 ):
                 zAdjust +=1
         else:
             print("zoom out")
-            if (int(zoom[0]) > 0):
+            if (int(oldZoom) > 0):
                 zAdjust -=1
-    if ("oldZoom" in request.args):
-        if (request.args['oldZoom'] != "None"):
-            newZoom = int(request.args["oldZoom"]) + zAdjust
-        else:
-            newZoom = 12
-    else:
-        newZoom = 12
+                    
+    newZoom = oldZoom + zAdjust
+    print(str(oldZoom) + "," + str(newZoom))
     zoom[0] = str(newZoom)
     li[6] = "&".join(zoom)
     url = "=".join(li)
-    return render_template("map.html", pic = url, oldZoom = str(newZoom))
+    print(url)
+    return render_template("map.html", pic = url, newZoom = str(newZoom))
 
 
 if __name__ == "__main__":
