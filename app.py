@@ -96,6 +96,8 @@ def geolocate(city):
         print("error arose while using Mapquest Geolocator")
         raise ValueError('Status code of {} while accessing Mapquest Geolocator: {}',data['info']['statuscode'],data['info']['messages'][0])
     result = data['results'][0]['locations'][0]
+    if result['geocodeQuality'] == "COUNTRY":
+        raise ValueError('Poor granularity result of MapQuest Geolocator on \"{}\": Check for typos'.format(city))
     out = {} # to nicely package only the results We Want, creating a new dictionary; makes it easier to get country code, etc.
     out['country'] = result['adminArea1']
     out['lat'] = result['latLng']['lat']
@@ -143,20 +145,21 @@ def process_city():
     cityname = request.args['city_name']
     session['destination'] = cityname
     # print(cityname)
+    try:
+        geoloc = geolocate(cityname) # get the country of the desired city
+        session['desiredCountry'] = geoloc['country']
+        country = country_info(geoloc['country']) # get the information of the desired country
+        # print(geoloc['country'])
+        session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
+        flash('Currency symbol: {}'.format(country['currency']['code']))
 
-    geoloc = geolocate(cityname) # get the country of the desired city
-    session['desiredCountry'] = geoloc['country']
-
-    # print(geoloc['country'])
-    country = country_info(geoloc['country']) # get the information of the desired country
-    session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
+        return redirect(url_for("information")) # temporary!
+    except ValueError as e:
+        flash('Error while accessing information: {}'.format(e),'error')
+        return redirect(url_for('landing_page'))
 
     # print(country['name'])
     # print(country['currency']['code'])
-
-    flash('Currency symbol: {}'.format(country['currency']['code']))
-
-    return redirect(url_for("information")) # temporary!
 
 
 @app.route("/currency")
@@ -225,14 +228,16 @@ def genDicWeek(dic):
 
 @app.route("/info")
 def information():
-    city = session['destination'].replace(' ','%20')
-    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + city + "&utf8=&format=json")
+    city = session['destination']
+    city_encoded = city.replace(' ','%20')
+    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json".format(city_encoded))
     response = u.read()
     data = json.loads(response)
     page = data['query']['search'][0]
     page = page['pageid']
     title = data['query']['search'][0]['title']
-    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title + "&format=json")
+    title_encoded = title.replace(' ','%20')
+    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title_encoded + "&format=json")
     response = u.read()
     data = json.loads(response)
     data = data['query']['pages'][str(page)]['extract']
