@@ -102,9 +102,14 @@ def geolocate(city):
     out['country'] = result['adminArea1']
     out['lat'] = result['latLng']['lat']
     out['lon'] = result['latLng']['lng']
-    out['mapurl'] = result['mapUrl']
+    out['mapUrl'] = result['mapUrl']
     session['desiredLat'] = out['lat']
     session['desiredLon'] = out['lon']
+    li = out['mapUrl'].split("=")
+    dimensions = li[3].split("&")
+    dimensions[0] = "500,500"
+    li[3] = "&".join(dimensions)
+    session['mapUrl'] = "=".join(li)
     return out
 
 
@@ -245,6 +250,35 @@ def information():
     if len(data) > 10:
         data = data[0:9]
     return render_template("information.html", city = session['destination'], info = data, length = len(data))
+
+
+
+@app.route("/map")
+def displayMap():
+    zAdjust = 0
+    li = session['mapUrl'].split("=")
+    zoom = li[6].split("&")
+    print(str(li) + "\n"  +str(zoom))
+    if ('zoom' in request.args):
+        if (request.args['zoom'] == "Zoom In"):
+            print("zoom in")
+            if (int(zoom[0]) < 19 ):
+                zAdjust +=1
+        else:
+            print("zoom out")
+            if (int(zoom[0]) > 0):
+                zAdjust -=1
+    if ("oldZoom" in request.args):
+        if (request.args['oldZoom'] != "None"):
+            newZoom = int(request.args["oldZoom"]) + zAdjust
+        else:
+            newZoom = 12
+    else:
+        newZoom = 12
+    zoom[0] = str(newZoom)
+    li[6] = "&".join(zoom)
+    url = "=".join(li)
+    return render_template("map.html", pic = url, oldZoom = str(newZoom))
 
 
 if __name__ == "__main__":
