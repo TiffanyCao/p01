@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, session, flash, redirect, url
 import json
 import urllib
 import sqlite3
+from datetime import date
 
 app = Flask(__name__)
 
@@ -19,22 +20,25 @@ baseC = "NZD"
 destinationC = "EUR"
 DB_FILE = "data/travel.db"
 
+
 # =================== Part 1: Database/Table Accessing Functions ===================
 
 def checkCurrency(base, destination):
+    if base == destination:
+        return 1.0
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
     # check to see if database already has this base-destination pair
     command = "SELECT rate, timestamp FROM currency WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
     cur = c.execute(command)
     temp = cur.fetchone()
-    print("here is temp")
-    print(temp)
+    # print("here is temp")
+    # print(temp)
     if temp:
-        # if temp[0][1] < time:
-        #     return "need update"
-        # else:
-        return temp[0]
+        if temp[1] != str(date.today()):
+            return "need update"
+        else:
+            return temp[0]
     db.commit()
     db.close()
     return "pair not found"
@@ -51,6 +55,8 @@ def updateCurrency(base, destination, rate, timestamp):
         command = "UPDATE currency SET timestamp = \"" + timestamp + "\" WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
         c.execute(command)
         db.commit()
+        # print("here is temp2")
+        # print(temp[0])
         if temp[0] != rate: # updates exchange rate if not equal
             command = "UPDATE currency SET rate = \"" + rate + "\" WHERE base = \"" + base + "\" AND destination = \"" + destination + "\""
             c.execute(command)
@@ -83,9 +89,11 @@ def getUrl(weather):
 
 # =================== Part 2: API Accessing Functions ===================
 
-mapquest_key = keys['mapquest']
+mapquest_key = keys['mapquest'] # retreving key from json file
 mapquest_request = "http://open.mapquestapi.com/geocoding/v1/address?key={}&location={}"
 
+
+# function that uses the MapQuest API to find the country, coordinates, and map url of a given city
 def geolocate(city):
     city_encoded = city.replace(' ','%20')
     url = mapquest_request.format(mapquest_key,city_encoded)
@@ -115,6 +123,8 @@ def geolocate(city):
 
 restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
 
+
+# function that uses the REST Countries API to find the currency symbol given the country
 def country_info(country): # country code, 2 letters (would work w a three letter code too)
     url = restcountries_request.format(country)
     u = urllib.request.urlopen(url)
@@ -130,23 +140,25 @@ def country_info(country): # country code, 2 letters (would work w a three lette
 
 # ======================= Part 3: Routes =======================
 
+# landing route
 @app.route("/")
 def landing_page():
-    flash('Previous search successfully cleared. (not actually tho, not yet anyways)')
-    # NOTE! this is my weird way of asking, when a user loads root (aka the search page) the old search should be cleared out right?
-    # in the way i did some navbar stuff i assumed that like, when on '/' no city is in session yet and so other pages should be disabled
-    # and i made the 'search' link change to 'new search' if you're viewing it on other pages ('/info','/weather',etc)
-    # -KV
+    # print(session['destination'])
+    flash('Previous search successfully cleared.')
 
     # alert users of missing keys if they are missing
     for service in keys:
         if keys[service] == 'YOUR_API_KEY_HERE':
-            flash('key for {} is missing: see README.md for instructions on procuring a key and installing it to the app.'.format(service),'error')
+            flash('Key for {} is missing: see README.md for instructions on procuring a key and installing it to the app.'.format(service),'error')
     return render_template("welcome.html")
 
 
+# processes input from the Search box and redirects to
 @app.route("/city")
 def process_city():
+    if request.args.get('city_name') is None:
+        session.clear() # clear previous session if there is no new input
+        return redirect(url_for('landing_page'))
     cityname = request.args['city_name']
     session['destination'] = cityname
     # print(cityname)
@@ -158,9 +170,10 @@ def process_city():
         session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
         flash('Currency symbol: {}'.format(country['currency']['code']))
 
-        return redirect(url_for("information")) # temporary!
+        return redirect(url_for("information"))
     except ValueError as e:
-        flash('Error while accessing information: {}'.format(e),'error')
+        session.clear() # clear previous session
+        flash('Error while accessing information: {}'.format(e),'error') # check if spelling of input is correct
         return redirect(url_for('landing_page'))
 
     # print(country['name'])
@@ -169,17 +182,18 @@ def process_city():
 
 @app.route("/currency")
 def money():
+    if session.get('destination') is None:
+        return redirect(url_for('landing_page'))
     check = checkCurrency(baseC, session['desiredCurrency'])
     print(check)
-    if check == "pair not found":
+    if check == "need update" or check == "pair not found":
         u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
         response= u.read()
         data = json.loads(response)
         data = data['rates'][session['desiredCurrency']]
-        updateCurrency(baseC, session['desiredCurrency'], str(data), "00")
+        updateCurrency(baseC, session['desiredCurrency'], str(data), str(date.today()))
         flash('Data received live from Currency Exchange Rate API')
     else:
-        print(check)
         data = check
         flash('Data retreived from cache')
     input = request.args.get("inputval")
@@ -193,6 +207,8 @@ def money():
 
 @app.route("/weather")
 def forecast():
+    if session.get('destination') is None:
+        return redirect(url_for('landing_page'))
     lat = str(session['desiredLat'])
     lon = str(session['desiredLon'])
     u = urllib.request.urlopen("https://api.darksky.net/forecast/" + keys['darksky'] + "/" + lat + "," + lon)
@@ -233,6 +249,8 @@ def genDicWeek(dic):
 
 @app.route("/info")
 def information():
+    if session.get('destination') is None:
+        return redirect(url_for('landing_page'))
     city = session['destination']
     city_encoded = city.replace(' ','%20')
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json".format(city_encoded))
@@ -241,6 +259,7 @@ def information():
     page = data['query']['search'][0]
     page = page['pageid']
     title = data['query']['search'][0]['title']
+    session['destination'] = title
     title_encoded = title.replace(' ','%20')
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title_encoded + "&format=json")
     response = u.read()
@@ -255,6 +274,8 @@ def information():
 
 @app.route("/map")
 def displayMap():
+    if session.get('destination') is None:
+        return redirect(url_for('landing_page'))
     zAdjust = 0
     li = session['mapUrl'].split("=")
     zoom = li[6].split("&")
@@ -275,14 +296,14 @@ def displayMap():
             print("zoom out")
             if (int(oldZoom) > 0):
                 zAdjust -=1
-                    
+
     newZoom = oldZoom + zAdjust
     print(str(oldZoom) + "," + str(newZoom))
     zoom[0] = str(newZoom)
     li[6] = "&".join(zoom)
     url = "=".join(li)
     print(url)
-    return render_template("map.html", pic = url, newZoom = str(newZoom))
+    return render_template("map.html", pic = url, newZoom = str(newZoom), city = session['destination'])
 
 
 if __name__ == "__main__":
