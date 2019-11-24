@@ -54,13 +54,18 @@ kiranV -- 2019-11-19 22:08
     - uploaded updated design doc, containing updates to list of APIs to be implemented, additional section for bootstrap FEF, and other minor changes
     *** these updates encompass changes made by all group members!!
 
+ayhamA -- 2019-11-20 8:12
+    - created and added to requirements.txt
+    - attempted to freeze in pip3 but ran into complications with venv
+    - Kiran continued work on the requirements.txt
+
 tiffanyC -- 2019-11-20 12:01
      - created database for currency, where new pairs of currencies are stored along with their timestamp
      - fixed currency functions
      - rewrote currency route to use the currency functions
      - currency route tested and it works
 
- clementC -- 2019-11-20 21:47
+clementC -- 2019-11-20 21:47
      - created a weather route
      - takes the longitude and latitude from the session variable taken from the city route
      - route retrieves weather data from Dark Sky API and stores all the information in a dictionary
@@ -127,4 +132,19 @@ kiranV -- 2019-11-22 23:49
     - Corrected a bug regarding spaces in URLs from the wikipedia access function (might only be a problem locally on my computer)
 
 kiranV -- 2019-11-23 08:21
-    - Wrote instructions for key acquisition on MapQuest and Dark Sky APIs at the bottom of the README.md (issue from board) 
+    - Wrote instructions for key acquisition on MapQuest and Dark Sky APIs at the bottom of the README.md (issue from board)
+
+chanC -- 2019-11-23 15:30
+    - created a map route
+    - takes map url from session (modified geoloc to store modified map url in session)
+    - added zoom functionality (edits map url to resize/adjust zoom)
+
+chanC -- 2019-11-23 16:15
+    - fixed zoom to no longer allow users to zoom past the limits that mapquest has (would not display an image when out of bounds before)
+
+tiffanyC -- 2019-11-23 18:00
+    - added styling to some html files
+    - fixed up map route and map.html to display the page better
+    - fixed currency database function to update the data and timestamp from the Currency API if the data is a day old
+    - fixed routes so that they can't be accessed unless there are session variables; clear session before new search
+    - added comments to app.py

@@ -5,8 +5,9 @@
 
 {% block content %}
   <div class="row">
-    <h3 style="opacity: .6;">Currency Exchange</h3>
+    <h1 style = "color: #F4EF88;">Currency Exchange</h1>
   </div>
+  <br>
   <div class="row">
     <div class="col-sm">
       <div class="card currency-card">
@@ -24,7 +25,8 @@
           <p class="card-text"><strong>{{basecurrency}} to {{targetcurrency}}</strong></p>
           <form action="/currency">
             <input type="number" name="inputval" value= {{money}} />
-            <input type="submit" name="submit" value="Convert" />
+            <!-- <input type="submit" name="submit" value="Convert" /> -->
+            <button type="submit" class="btn btn-primary btn-sm">Convert</button>
         </div>
       </div>
     </div>
