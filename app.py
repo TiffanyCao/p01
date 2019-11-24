@@ -16,7 +16,6 @@ app.secret_key = 'water'
 keyfile = open('keys.json')
 keys = json.load(keyfile)
 
-baseC = "NZD"
 destinationC = "EUR"
 DB_FILE = "data/travel.db"
 
@@ -137,6 +136,18 @@ def country_info(country): # country code, 2 letters (would work w a three lette
     out['name'] = data['name']
     return out
 
+ipstack_request = "http://api.ipstack.com/check?access_key={}"
+ipstack_key = keys['ipstack']
+
+
+def base_currency():
+    url = ipstack_request.format(ipstack_key)
+    u = urllib.request.urlopen(url)
+    response = u.read()
+    data = json.loads(response)
+    return country_info(data["country_code"])
+
+
 
 # ======================= Part 3: Routes =======================
 
@@ -182,6 +193,7 @@ def process_city():
 # uses Currency API to obtain currency exchange rates based on session['destination']
 @app.route("/currency")
 def money():
+    baseC = base_currency()['currency']['code']
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
     check = checkCurrency(baseC, session['desiredCurrency']) # check if the base-destination pair is in database
