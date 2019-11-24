@@ -50,3 +50,8 @@ None of the below keys require payment information for the beginning of usage. T
   - the only required fields are an email and password
 2. Confirm your email address by clicking the link sent to the email address entered, and then log in with your new credentials
 3. Copy the secret key displayed on the landing page post-login, and paste it into `keys.json` in place of `YOUR_API_KEY_HERE` the 'darksky' field
+
+#### IP Stack API - Geolocation part 2
+1. Register an account on [their site](https://ipstack.com/)
+2. Open dashboard and yoink the API key you're given
+3. Drop the API key into the 'keys.json' in place of the 'YOUR_API...' in the 'ipstack' field

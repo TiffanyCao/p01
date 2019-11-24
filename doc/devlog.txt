@@ -148,3 +148,6 @@ tiffanyC -- 2019-11-23 18:00
     - fixed currency database function to update the data and timestamp from the Currency API if the data is a day old
     - fixed routes so that they can't be accessed unless there are session variables; clear session before new search
     - added comments to app.py
+alnasserA -- 2019-11-24 14:02
+    - added functionality to currency of user
+    - updated ipstack key acquisition
