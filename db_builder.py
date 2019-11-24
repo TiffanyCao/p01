@@ -15,6 +15,10 @@ c = db.cursor()               #facilitate db ops
 command = "CREATE TABLE IF NOT EXISTS currency (base TEXT, destination TEXT, rate REAL, timestamp BLOB)"
 c.execute(command)
 
+# place information table
+command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, info TEXT, last_cached TIMESTAMP)"
+c.execute(command)
+
 #================================================
 db.commit()
 db.close()
