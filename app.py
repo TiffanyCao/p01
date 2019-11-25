@@ -85,7 +85,66 @@ file.close()
 def getUrl(weather):
     return dict[weather]
 
+# command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, info TEXT, last_cached TIMESTAMP)"
 
+
+def cachecity(cityname): # checks whether city is in database, updates/creates as necessary, adds city to session
+    cityname = cityname.lower() # in order to standardize city inputs
+    db = sqlite3.connect(DB_FILE)  # open database
+    c = db.cursor()
+    print(cityname)
+    # check to see if database already has this base-destination pair
+    command = "select city,last_cached from place_info where city = '{}';".format(cityname)
+    cur = c.execute(command)
+    city_lastcache = cur.fetchone()
+    print(city_lastcache)
+    db.commit()
+    db.close()
+    if city_lastcache:
+        if city_lastcache[1] != str(date.today()):
+            flash('Data received live, updating cache')
+            # case: database needs to be updated
+            downloadcitydata(cityname)
+            storesession(False)
+        else:
+            # case: database is up to date
+            flash('Data received from cached database')
+            loadcitydata_tosession(cityname)
+    else:
+        flash('First search for {}: Data downloaded live'.format(cityname))
+        downloadcitydata(cityname)
+        storesession(True)
+
+def storesession(is_newcity):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    if is_newcity:
+        command = "insert into place_info(city) values('{}')".format(session['destination'].lower())
+        c.execute(command)
+    command = """
+update place_info
+    set
+        currency = '{}',
+        info = '{}',
+        countrycode = '{}',
+        last_cached = '{}'
+    where
+        city = '{}'
+"""
+    command = command.format(session['desiredCurrency'],'dummy info',session['desiredCountry'],date.today(),session['destination'].lower())
+    c.execute(command)
+    db.commit()
+
+def loadcitydata_tosession(cityname):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "select city,countrycode,currency,info from place_info where city = '{}'".format(cityname)
+    c.execute(command)
+    data = c.fetchone()
+    session['destination'] = data[0]
+    session['desiredCountry'] = data[1]
+    session['desiredCurrency'] = data[2]
+    session['info'] = data[3]
 # =================== Part 2: API Accessing Functions ===================
 
 mapquest_key = keys['mapquest'] # retreving key from json file
@@ -147,7 +206,14 @@ def base_currency():
     data = json.loads(response)
     return country_info(data["country_code"])
 
-
+def downloadcitydata(cityname): # compilation of all downloads that happen at /city
+    session['destination'] = cityname
+    geoloc = geolocate(cityname) # get the country of the desired city
+    session['desiredCountry'] = geoloc['country']
+    country = country_info(geoloc['country']) # get the information of the desired country
+    # print(geoloc['country'])
+    session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
+    flash('Currency symbol: {}'.format(country['currency']['code']))
 
 # ======================= Part 3: Routes =======================
 
@@ -155,6 +221,7 @@ def base_currency():
 @app.route("/")
 def landing_page():
     # print(session['destination'])
+    session.clear()
     flash('Previous search successfully cleared.')
 
     # alert users of missing keys if they are missing
@@ -168,20 +235,11 @@ def landing_page():
 @app.route("/city")
 def process_city():
     if request.args.get('city_name') is None:
-        session.clear() # clear previous session if there is no new input
         return redirect(url_for('landing_page'))
     cityname = request.args['city_name']
-    session['destination'] = cityname
-    # print(cityname)
     try:
-        geoloc = geolocate(cityname) # get the country of the desired city
-        session['desiredCountry'] = geoloc['country']
-        country = country_info(geoloc['country']) # get the information of the desired country
-        # print(geoloc['country'])
-        session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
-        flash('Currency symbol: {}'.format(country['currency']['code']))
-
-        return redirect(url_for("information"))
+        cachecity(cityname)
+        return redirect(url_for('information'))
     except ValueError as e:
         session.clear() # clear previous session
         flash('Error while accessing information: {}'.format(e),'error') # check if spelling of input is correct
