@@ -162,3 +162,5 @@ flycheck_*.el
 
 #key file
 *.json
+
+./idea/*
