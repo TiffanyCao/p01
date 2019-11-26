@@ -162,3 +162,19 @@ tiffanyC -- 2019-11-25 08:09
     - store city information (city name, country name, currency code, urls of images, Wikipedia info) (Kiran)
     - add more Bootstrap to HTML pages (in particular: weather.html) (Kiran)
     - update design doc (Clement + Tiffany)
+
+kiranV -- 2019-11-25 15:30
+    - Built out methods for database calls on place_info table; information now gets cached in travel.db
+    - Reorganized code for map API functions, /city route calls, made code more readable
+
+ayhamA -- 2019-11-25 22:00
+    - STUFF
+
+tiffanyC -- 2019-11-25 22:00
+    - STUFF
+
+kiranV -- 2019-11-25 23:50
+    - Restructured calls to wikipedia info and images to be contained within /city route
+    - Organized wikipedia functions into separate functions, made code a little bit cleaner
+    - Added info and image urls to place_info database
+    - Made city name in database match wikipedia title to avoid duplicate database entries due to typos
