@@ -8,7 +8,6 @@ import json
 import urllib
 import sqlite3
 from datetime import date
-import random
 
 app = Flask(__name__)
 
@@ -93,12 +92,12 @@ def cachecity(cityname): # checks whether city is in database, updates/creates a
     cityname = cityname.lower() # in order to standardize city inputs
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
-    print(cityname)
+    # print(cityname)
     # check to see if database already has this base-destination pair
     command = "select city,last_cached from place_info where city = '{}';".format(cityname)
     cur = c.execute(command)
     city_lastcache = cur.fetchone()
-    print(city_lastcache)
+    # print(city_lastcache)
     db.commit()
     db.close()
     if city_lastcache:
@@ -164,7 +163,7 @@ def geolocate(city):
     response = u.read()
     data = json.loads(response)
     if data['info']['statuscode'] != 0:
-        print("Error arose while using MapQuest Geolocator")
+        # print("Error arose while using MapQuest Geolocator")
         raise ValueError('Status code of {} while accessing Mapquest Geolocator: {}',data['info']['statuscode'],data['info']['messages'][0])
     result = data['results'][0]['locations'][0]
     if result['geocodeQuality'] == "COUNTRY":
@@ -184,7 +183,7 @@ def geolocate(city):
 mapquest_staticmap_request = "https://www.mapquestapi.com/staticmap/v5/map?key={}&center={},{}&size=720,405&zoom={}"
 def getMapUrl(lat,lon,newZoom):
     url = mapquest_staticmap_request.format(mapquest_key,lat,lon,newZoom)
-    print(url)
+    # print(url)
     return url
 
 def calcZoom(args):
@@ -199,16 +198,16 @@ def calcZoom(args):
         oldZoom = 12
     if ('zoom' in args):
         if (args['zoom'] == "Zoom In"):
-            print("zoom in")
+           #  print("zoom in")
             if (int(oldZoom) < 19 ):
                 zAdjust +=1
         else:
-            print("zoom out")
+            # print("zoom out")
             if (int(oldZoom) > 0):
                 zAdjust -=1
     # process zooming of map
     newZoom = oldZoom + zAdjust
-    print(str(oldZoom) + "," + str(newZoom))
+   #  print(str(oldZoom) + "," + str(newZoom))
     return newZoom
 
 restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
@@ -290,14 +289,11 @@ def money():
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
     check = checkCurrency(baseC, session['desiredCurrency']) # check if the base-destination pair is in database
-    print(check)
+    # print(check)
     if check == "need update" or check == "pair not found": # if the rate doesn't exist or needs to be updated
         u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
         response= u.read()
         data = json.loads(response)
-        if not session['desiredCurrency'] in data['rates']:
-            flash('Currency code {} not tracked by Exchange Rate API; currency page unavailable.'.format(session['desiredCurrency']),'error')
-            return redirect(url_for('information'))
         data = data['rates'][session['desiredCurrency']]
         updateCurrency(baseC, session['desiredCurrency'], str(data), str(date.today()))
         flash('Data received live from Currency Exchange Rate API')
@@ -359,26 +355,6 @@ def genDicWeek(dic):
     return newSet
 
 
-def img_stuffs(title_encoded, page):
-    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=images&format=json&imlimit=3".format(title_encoded))
-    response = u.read()
-    img_data = json.loads(response)
-    images = []
-    def_image = ['https://scx1.b-cdn.net/csz/news/800/2019/earth.jpg',
-                 'https://i.pinimg.com/originals/b0/d5/97/b0d59733d5541b8ecbf628f84fbb863e.png',
-                 'https://www.usnews.com/dims4/USNEWS/aa02be1/2147483647/thumbnail/640x420/quality/85/?url=http%3A%2F%2Fcom-usnews-beam-media.s3.amazonaws.com%2Fa3%2Fc9%2F07d54d4543ac9dd2b5c31411b16e%2F2-fairbanks-getty.jpg']
-    img_data = img_data['query']['pages'][str(page)]['images']
-    for i in img_data:
-        url = urllib.request.urlopen( "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url&format=json".format(i['title'].replace(' ', '_').encode('utf-8')))  # utf-8 prevents the accents from causing a booboo
-        response = url.read()
-        response_data = json.loads(response)
-        try:
-            image = response_data['query']['pages']['-1']['imageinfo'][0]['url']
-            images.append(image)
-        except KeyError:
-            images = [x for x in def_image]
-    return images
-
 
 # uses Wikipedia API to get text from the Wiki page on the city
 @app.route("/info")
@@ -393,7 +369,7 @@ def information():
     page = data['query']['search'][0]  # get page ID of the Wikipedia page
     page = page['pageid']
     title = data['query']['search'][0]['title']  # get Wikipedia page title
-    # session['destination'] = title
+    session['destination'] = title
     title_encoded = title.replace(' ','%20')
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title_encoded + "&format=json")
     response = u.read()
@@ -407,6 +383,30 @@ def information():
                            image1=images[0], image2=images[1], image3=images[2])
 
 
+def img_stuffs(title_encoded, page):
+    u = urllib.request.urlopen(
+        "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=images&format=json&imlimit=3".format(
+            title_encoded))
+    response = u.read()
+    img_data = json.loads(response)
+    def_image = ['https://scx1.b-cdn.net/csz/news/800/2019/earth.jpg',
+                 'https://i.pinimg.com/originals/b0/d5/97/b0d59733d5541b8ecbf628f84fbb863e.png',
+                 'https://www.usnews.com/dims4/USNEWS/aa02be1/2147483647/thumbnail/640x420/quality/85/?url=http%3A%2F%2Fcom-usnews-beam-media.s3.amazonaws.com%2Fa3%2Fc9%2F07d54d4543ac9dd2b5c31411b16e%2F2-fairbanks-getty.jpg']
+    images = []
+    # print(img_data['query']['pages'])
+    img_data = img_data['query']['pages'][str(page)]['images']
+    for i in img_data:
+        url = urllib.request.urlopen(
+            "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url&format=json".format(
+                i['title'].replace(' ', '_')))
+        response = url.read()
+        response_data = json.loads(response)
+        try:
+            image = response_data['query']['pages']['-1']['imageinfo'][0]['url']
+            images.append(image)
+        except:
+            images = def_image
+    return images
 
 # uses the map URL from MapQuest API to get the map
 @app.route("/map")
