@@ -4,7 +4,6 @@
     <list default="true" id="cf2b26db-c6bd-4e0e-ba7d-c20d40b8d480" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/travel.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/travel.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keys.json" beforeDir="false" afterPath="$PROJECT_DIR$/keys.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +16,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
-              <caret line="388" column="143" selection-start-line="388" selection-start-column="143" selection-end-line="388" selection-end-column="143" />
+            <state relative-caret-position="299">
+              <caret line="368" column="241" selection-start-line="368" selection-start-column="241" selection-end-line="368" selection-end-column="241" />
               <folding>
                 <element signature="e#144#228#0" expanded="true" />
               </folding>
@@ -94,10 +93,6 @@
       <pane id="ProjectPane">
         <subPane>
           <expand>
-            <path>
-              <item name="p01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="p01" type="462c0819:PsiDirectoryNode" />
-            </path>
             <path>
               <item name="p01" type="b2602c69:ProjectViewProjectNode" />
               <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
@@ -272,7 +267,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32924962" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.05206738" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.1883614" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39969373" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -378,8 +373,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="388" column="143" selection-start-line="388" selection-start-column="143" selection-end-line="388" selection-end-column="143" />
+        <state relative-caret-position="299">
+          <caret line="368" column="241" selection-start-line="368" selection-start-column="241" selection-end-line="368" selection-end-column="241" />
           <folding>
             <element signature="e#144#228#0" expanded="true" />
           </folding>

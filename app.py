@@ -366,7 +366,7 @@ def img_stuffs(title_encoded, page):
                  'https://www.usnews.com/dims4/USNEWS/aa02be1/2147483647/thumbnail/640x420/quality/85/?url=http%3A%2F%2Fcom-usnews-beam-media.s3.amazonaws.com%2Fa3%2Fc9%2F07d54d4543ac9dd2b5c31411b16e%2F2-fairbanks-getty.jpg']
     img_data = img_data['query']['pages'][str(page)]['images']
     for i in img_data:
-        url = urllib.request.urlopen( "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url&format=json".format(i['title'].replace(' ', '_')))
+        url = urllib.request.urlopen( "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url&format=json".format(i['title'].replace(' ', '_')).encode('utf-8'))  # utf-8 prevents the accents from causing a booboo
         response = url.read()
         response_data = json.loads(response)
         try:
