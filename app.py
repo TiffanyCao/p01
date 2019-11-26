@@ -8,6 +8,7 @@ import json
 import urllib
 import sqlite3
 from datetime import date
+import random
 
 app = Flask(__name__)
 
@@ -358,6 +359,27 @@ def genDicWeek(dic):
     return newSet
 
 
+def img_stuffs(title_encoded, page):
+    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=images&format=json&imlimit=3".format(title_encoded))
+    response = u.read()
+    img_data = json.loads(response)
+    images = []
+    def_image = ['https://scx1.b-cdn.net/csz/news/800/2019/earth.jpg',
+                 'https://i.pinimg.com/originals/b0/d5/97/b0d59733d5541b8ecbf628f84fbb863e.png',
+                 'https://www.usnews.com/dims4/USNEWS/aa02be1/2147483647/thumbnail/640x420/quality/85/?url=http%3A%2F%2Fcom-usnews-beam-media.s3.amazonaws.com%2Fa3%2Fc9%2F07d54d4543ac9dd2b5c31411b16e%2F2-fairbanks-getty.jpg']
+    img_data = img_data['query']['pages'][str(page)]['images']
+    for i in img_data:
+        url = urllib.request.urlopen( "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url&format=json".format(i['title'].replace(' ', '_').encode('utf-8')))  # utf-8 prevents the accents from causing a booboo
+        response = url.read()
+        response_data = json.loads(response)
+        try:
+            image = response_data['query']['pages']['-1']['imageinfo'][0]['url']
+            images.append(image)
+        except KeyError:
+            images = [x for x in def_image]
+    return images
+
+
 # uses Wikipedia API to get text from the Wiki page on the city
 @app.route("/info")
 def information():
@@ -380,21 +402,10 @@ def information():
     data = data.split('. ')
     if len(data) > 10:  # cut down length of text
         data = data[0:9]
-    #images
-    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=images&format=json&imlimit=3".format(title_encoded))
-    response = u.read()
-    img_data = json.loads(response)
-    images = []
-    print(img_data['query']['pages'])
-    img_data = img_data['query']['pages'][str(page)]['images']
-    for i in img_data:
-        url = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url&format=json".format(i['title'].replace(' ','_')))
-        response = url.read()
-        response_data = json.loads(response)
-        image = response_data['query']['pages']['-1']['imageinfo'][0]['url']
-        images.append(image)
+    images = img_stuffs(title_encoded, page)
     return render_template("information.html", city=session['destination'], info=data, length=len(data),
                            image1=images[0], image2=images[1], image3=images[2])
+
 
 
 # uses the map URL from MapQuest API to get the map
