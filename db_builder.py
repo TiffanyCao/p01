@@ -16,7 +16,7 @@ command = "CREATE TABLE IF NOT EXISTS currency (base TEXT, destination TEXT, rat
 c.execute(command)
 
 # place information table
-command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, latitude REAL, longitude REAL, info TEXT, last_cached TIMESTAMP)"
+command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, latitude REAL, longitude REAL, info TEXT, images TEXT, last_cached TIMESTAMP)"
 c.execute(command)
 
 #================================================

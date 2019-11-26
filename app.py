@@ -89,58 +89,67 @@ def getUrl(weather):
 
 
 def cachecity(cityname): # checks whether city is in database, updates/creates as necessary, adds city to session
-    cityname = cityname.lower() # in order to standardize city inputs
+    page,title = get_citypage(cityname)
+    session['destination'] = title
+    session['page'] = page
+    # cityname = cityname.lower() # in order to standardize city inputs
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
     # print(cityname)
     # check to see if database already has this base-destination pair
-    command = "select city,last_cached from place_info where city = '{}';".format(cityname)
+    command = "select city,last_cached from place_info where city = '{}';".format(title)
     cur = c.execute(command)
     city_lastcache = cur.fetchone()
-    # print(city_lastcache)
+    print(title)
+    print(city_lastcache)
     db.commit()
     db.close()
     if city_lastcache:
         if city_lastcache[1] != str(date.today()):
             flash('Data received live, updating cache')
             # case: database needs to be updated
-            downloadcitydata(cityname)
+            downloadcitydata(title)
             storesession(False)
         else:
             # case: database is up to date
             flash('Data received from cached database')
-            loadcitydata_tosession(cityname)
+            loadcitydata_tosession(title)
     else:
-        flash('First search for {}: Data downloaded live'.format(cityname))
-        downloadcitydata(cityname)
+        flash('First search for {}: Data downloaded live'.format(title))
+        print('New thing')
+        downloadcitydata(title)
         storesession(True)
 
 def storesession(is_newcity):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     if is_newcity:
-        command = "insert into place_info(city) values('{}')".format(session['destination'].lower())
+        command = "insert into place_info(city) values('{}')".format(session['destination'])
         c.execute(command)
     command = """
 update place_info
     set
         currency = '{}',
-        info = '{}',
+        info = "{}",
         countrycode = '{}',
         last_cached = '{}',
         latitude = {},
-        longitude = {}
+        longitude = {},
+        images = '{}'
     where
         city = '{}'
 """
-    command = command.format(session['desiredCurrency'],'dummy info',session['desiredCountry'],date.today(),session['desiredLat'],session['desiredLon'],session['destination'].lower())
+    print(','.join(session['images']))
+    print(session['info'])
+    command = command.format(session['desiredCurrency'],session['info'].replace("'","\\'"),session['desiredCountry'],date.today(),session['desiredLat'],session['desiredLon'],','.join(session['images']),session['destination'])
+    print(command)
     c.execute(command)
     db.commit()
 
 def loadcitydata_tosession(cityname):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    command = "select city,countrycode,currency,info,latitude,longitude from place_info where city = '{}'".format(cityname)
+    command = "select city,countrycode,currency,info,latitude,longitude,images from place_info where city = '{}'".format(cityname)
     c.execute(command)
     data = c.fetchone()
     session['destination'] = data[0]
@@ -149,6 +158,7 @@ def loadcitydata_tosession(cityname):
     session['info'] = data[3]
     session['desiredLat'] = data[4]
     session['desiredLon'] = data[5]
+    session['images'] = data[6].split(',')
 # =================== Part 2: API Accessing Functions ===================
 
 mapquest_key = keys['mapquest'] # retreving key from json file
@@ -238,7 +248,13 @@ def base_currency():
     return country_info(data["country_code"])
 
 def downloadcitydata(cityname): # compilation of all downloads that happen at /city
-    session['destination'] = cityname
+    info = get_citydata(session['destination'],session['page'])
+    print('getting images')
+    images = img_stuffs(session['destination'],session['page'])
+    session['info'] = info
+    session['images'] = images
+    print(images)
+    print(session['images'])
     geoloc = geolocate(cityname) # get the country of the desired city
     session['desiredLat'] = geoloc['lat']
     session['desiredLon'] = geoloc['lon']
@@ -354,36 +370,42 @@ def genDicWeek(dic):
                 newSet[i][idx] = dic[i][idx]
     return newSet
 
-
-
-# uses Wikipedia API to get text from the Wiki page on the city
-@app.route("/info")
-def information():
-    if session.get('destination') is None:
-        return redirect(url_for('landing_page'))
-    city = session['destination']
+wikipedia_request1 = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json"
+wikipedia_request2 = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles={}&format=json"
+def get_citypage(city):
     city_encoded = city.replace(' ','%20')
-    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json".format(city_encoded))
+    u = urllib.request.urlopen(wikipedia_request1.format(city_encoded))
     response = u.read()
     data = json.loads(response)
     page = data['query']['search'][0]  # get page ID of the Wikipedia page
     page = page['pageid']
     title = data['query']['search'][0]['title']  # get Wikipedia page title
-    session['destination'] = title
+    # session['destination'] = title
+    return page,title
+def get_citydata(title,page):
     title_encoded = title.replace(' ','%20')
-    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title_encoded + "&format=json")
+    u = urllib.request.urlopen(wikipedia_request2.format(title_encoded))
     response = u.read()
     data = json.loads(response)
     data = data['query']['pages'][str(page)]['extract']
     data = data.split('. ')
     if len(data) > 10:  # cut down length of text
         data = data[0:9]
-    images = img_stuffs(title_encoded, page)
+    return '. '.join(data)
+
+# uses Wikipedia API to get text from the Wiki page on the city
+@app.route("/info")
+def information():
+    if session.get('destination') is None:
+        return redirect(url_for('landing_page'))
+    data = session['info']
+    images = session['images']
     return render_template("information.html", city=session['destination'], info=data, length=len(data),
                            image1=images[0], image2=images[1], image3=images[2])
 
 
-def img_stuffs(title_encoded, page):
+def img_stuffs(title, page):
+    title_encoded = title.replace(' ','%20')
     u = urllib.request.urlopen(
         "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=images&format=json&imlimit=3".format(
             title_encoded))
@@ -406,6 +428,7 @@ def img_stuffs(title_encoded, page):
             images.append(image)
         except:
             images = def_image
+    print(images)
     return images
 
 # uses the map URL from MapQuest API to get the map
