@@ -130,7 +130,7 @@ def storesession(is_newcity):
 update place_info
     set
         currency = '{}',
-        info = "{}",
+        info = '{}',
         countrycode = '{}',
         last_cached = '{}',
         latitude = {},
@@ -141,10 +141,11 @@ update place_info
 """
     print(','.join(session['images']))
     print(session['info'])
-    command = command.format(session['desiredCurrency'],session['info'].replace("'","\\'"),session['desiredCountry'],date.today(),session['desiredLat'],session['desiredLon'],','.join(session['images']),session['destination'])
+    command = command.format(session['desiredCurrency'],session['info'].replace("'","''"),session['desiredCountry'],date.today(),session['desiredLat'],session['desiredLon'],','.join(session['images']),session['destination'])
     print(command)
     c.execute(command)
     db.commit()
+    db.close()
 
 def loadcitydata_tosession(cityname):
     db = sqlite3.connect(DB_FILE)
@@ -246,6 +247,31 @@ def base_currency():
     response = u.read()
     data = json.loads(response)
     return country_info(data["country_code"])
+
+
+wikipedia_request1 = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json"
+wikipedia_request2 = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles={}&format=json"
+def get_citypage(city):
+    city_encoded = city.replace(' ','%20')
+    u = urllib.request.urlopen(wikipedia_request1.format(city_encoded))
+    response = u.read()
+    data = json.loads(response)
+    page = data['query']['search'][0]  # get page ID of the Wikipedia page
+    page = page['pageid']
+    title = data['query']['search'][0]['title']  # get Wikipedia page title
+    # session['destination'] = title
+    return page,title
+def get_citydata(title,page):
+    title_encoded = title.replace(' ','%20')
+    u = urllib.request.urlopen(wikipedia_request2.format(title_encoded))
+    response = u.read()
+    data = json.loads(response)
+    data = data['query']['pages'][str(page)]['extract']
+    data = data.split('. ')
+    if len(data) > 10:  # cut down length of text
+        data = data[0:9]
+    return '. '.join(data)
+
 
 def downloadcitydata(cityname): # compilation of all downloads that happen at /city
     info = get_citydata(session['destination'],session['page'])
@@ -369,29 +395,6 @@ def genDicWeek(dic):
             if (idx in dic[i]):
                 newSet[i][idx] = dic[i][idx]
     return newSet
-
-wikipedia_request1 = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json"
-wikipedia_request2 = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles={}&format=json"
-def get_citypage(city):
-    city_encoded = city.replace(' ','%20')
-    u = urllib.request.urlopen(wikipedia_request1.format(city_encoded))
-    response = u.read()
-    data = json.loads(response)
-    page = data['query']['search'][0]  # get page ID of the Wikipedia page
-    page = page['pageid']
-    title = data['query']['search'][0]['title']  # get Wikipedia page title
-    # session['destination'] = title
-    return page,title
-def get_citydata(title,page):
-    title_encoded = title.replace(' ','%20')
-    u = urllib.request.urlopen(wikipedia_request2.format(title_encoded))
-    response = u.read()
-    data = json.loads(response)
-    data = data['query']['pages'][str(page)]['extract']
-    data = data.split('. ')
-    if len(data) > 10:  # cut down length of text
-        data = data[0:9]
-    return '. '.join(data)
 
 # uses Wikipedia API to get text from the Wiki page on the city
 @app.route("/info")
