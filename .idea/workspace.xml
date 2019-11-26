@@ -17,22 +17,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="380" column="137" selection-start-line="380" selection-start-column="137" selection-end-line="380" selection-end-column="137" />
+            <state relative-caret-position="236">
+              <caret line="388" column="143" selection-start-line="388" selection-start-column="143" selection-end-line="388" selection-end-column="143" />
               <folding>
                 <element signature="e#144#228#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/information.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-458">
-              <caret line="9" column="15" lean-forward="true" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
-              <folding>
-                <element signature="n#style#0;n#h1#0;n#body#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -109,11 +97,6 @@
             <path>
               <item name="p01" type="b2602c69:ProjectViewProjectNode" />
               <item name="p01" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="p01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="p01" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="p01" type="b2602c69:ProjectViewProjectNode" />
@@ -289,7 +272,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32924962" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27258804" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.05206738" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39969373" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -395,8 +378,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="380" column="137" selection-start-line="380" selection-start-column="137" selection-end-line="380" selection-end-column="137" />
+        <state relative-caret-position="236">
+          <caret line="388" column="143" selection-start-line="388" selection-start-column="143" selection-end-line="388" selection-end-column="143" />
           <folding>
             <element signature="e#144#228#0" expanded="true" />
           </folding>
