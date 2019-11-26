@@ -273,9 +273,9 @@ def information():
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json".format(city_encoded))
     response = u.read()
     data = json.loads(response)
-    page = data['query']['search'][0] # get page ID of the Wikipedia page
+    page = data['query']['search'][0]  # get page ID of the Wikipedia page
     page = page['pageid']
-    title = data['query']['search'][0]['title'] # get Wikipedia page title
+    title = data['query']['search'][0]['title']  # get Wikipedia page title
     session['destination'] = title
     title_encoded = title.replace(' ','%20')
     u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles=" + title_encoded + "&format=json")
@@ -283,9 +283,23 @@ def information():
     data = json.loads(response)
     data = data['query']['pages'][str(page)]['extract']
     data = data.split('. ')
-    if len(data) > 10: # cut down length of text
+    if len(data) > 10:  # cut down length of text
         data = data[0:9]
-    return render_template("information.html", city = session['destination'], info = data, length = len(data))
+    #images
+    u = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=images&format=json&imlimit=3".format(city_encoded))
+    response = u.read()
+    img_data = json.loads(response)
+    images = []
+    img_data = img_data['query']['pages'][str(page)]['images']
+    for i in img_data:
+        url = urllib.request.urlopen("https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url&format=json".format(i['title'].replace(' ','_')))
+        response = url.read()
+        response_data = json.loads(response)
+        print(type(response_data), type(response_data['query']), type(response_data['query']['pages']), type(response_data['query']['pages']['-1']), type(response_data['query']['pages']['-1']['imageinfo']))
+        image = response_data['query']['pages']['-1']['imageinfo'][0]['url']
+        images.append(image)
+    return render_template("information.html", city = session['destination'], info=data, length=len(data),
+                           image1=images[0], image2=images[1], image3=images[2])
 
 
 # uses the map URL from MapQuest API to get the map

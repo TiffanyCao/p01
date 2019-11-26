@@ -7,15 +7,13 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <style>
   .carousel {
-    width:640px;
-    height:360px;
+    width:auto;
+    height:auto;
     float: top;
-    margin-left:auto;
-    margin-right:auto;
   }
   .carousel-item {
-    width:640px;
-    height:360px;
+    width:inherit;
+    height:auto;
   }
   </style>
 
@@ -29,13 +27,13 @@
       <!-- content of a slideshow -->
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="https://wallpaperplay.com/walls/full/d/6/8/178663.jpg" class="d-block w-100" alt="...">
+          <img src={{image1}} class="d-block w-100 h-50 " alt="{{ city }} img1" width={{width1}} height={{height1}}>
         </div>
         <div class="carousel-item">
-          <img src="https://stmed.net/sites/default/files/coastline-wallpapers-27819-7273879.jpg" class="d-block w-100" alt="...">
+          <img src={{image2}} class="d-block w-100 h-50" alt="{{ city }} img2" width={{width2}} height={{height2}}>
         </div>
         <div class="carousel-item">
-          <img src="http://getwallpapers.com/wallpaper/full/3/a/5/1296572-ocean-wallpapers-high-resolution-2560x1440-images.jpg" class="d-block w-100" alt="..." width="640px;" height="360px;">
+          <img src={{image3}} class="d-block w-100 h-50" alt="{{ city }} img3" width={{width3}} height={{height3}}>
         </div>
       </div>
       <!-- You can add hyperlink tags that control the slideshow using "carousel-control" as a class attribute -->
