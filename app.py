@@ -294,6 +294,9 @@ def money():
         u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
         response= u.read()
         data = json.loads(response)
+        if not session['desiredCurrency'] in data['rates']:
+            flash('Currency code {} not tracked by Exchange Rate API; currency page unavailable.'.format(session['desiredCurrency']),'error')
+            return redirect(url_for('information'))
         data = data['rates'][session['desiredCurrency']]
         updateCurrency(baseC, session['desiredCurrency'], str(data), str(date.today()))
         flash('Data received live from Currency Exchange Rate API')
