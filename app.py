@@ -22,6 +22,12 @@ DB_FILE = "data/travel.db"
 
 # =================== Part 1: Database/Table Accessing Functions ===================
 
+mapquest_staticmap_request = "https://www.mapquestapi.com/staticmap/v5/map?key={}&center={},{}&size=720,405&zoom={}"
+
+def cachemap(url):
+    # TODO: yeet
+    pass
+
 def checkCurrency(base, destination):
     if base == destination:
         return 1.0
@@ -203,7 +209,6 @@ def geolocate(city):
     out['mapUrl'] = "=".join(li)
     return out
 
-mapquest_staticmap_request = "https://www.mapquestapi.com/staticmap/v5/map?key={}&center={},{}&size=720,405&zoom={}"
 def getMapUrl(lat,lon,newZoom):
     url = mapquest_staticmap_request.format(mapquest_key,lat,lon,newZoom)
     # print(url)
@@ -456,7 +461,8 @@ def displayMap():
         return redirect(url_for('landing_page'))
     zoom = calcZoom(request.args)
     url = getMapUrl(session['desiredLat'],session['desiredLon'],zoom)
-    return render_template("map.html", pic = url, newZoom = zoom, city = session['destination'])
+    cachemap(url)
+    return render_template("map.html", pic = url, newZoom = zoom, city = session['destination'].capitalize())
 
 
 if __name__ == "__main__":
