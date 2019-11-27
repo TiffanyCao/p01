@@ -8,6 +8,20 @@
     <h1 style = "color: #F4EF88;">Currency Exchange</h1>
   </div>
   <br>
+  <div class = "row">
+    <h5> If your base currency is incorrect, choose from the available currencies here: </h5>
+        <div class="btn-group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Currencies
+      </button>
+      <div class="dropdown-menu">
+        {% for i in allcurrencies %}
+        <a class="dropdown-item" href="#">{{ i }}</a>
+        {% endfor %}
+      </div>
+    </div>
+</div>
+<br>
   <div class="row">
     <div class="col-sm">
       <div class="card currency-card">

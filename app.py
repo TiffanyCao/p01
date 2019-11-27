@@ -87,6 +87,16 @@ for line in content:
 # print(dict) #testing results
 file.close()
 
+currencies = []
+u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/USD")
+response = u.read()
+data = json.loads(response)
+for key in data['rates']:
+    currencies.append(key)
+
+# print(currencies)
+# print(len(currencies))
+
 def getUrl(weather):
     return dict[weather]
 
@@ -353,7 +363,7 @@ def money():
         outcome = "Please input a value."
     else:
         outcome = "" + str(float(input) * data)
-    return render_template("currency.html", basecurrency = baseC, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome)
+    return render_template("currency.html", basecurrency = baseC, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome, allcurrencies = currencies)
 
 
 # uses Dark Sky API and the city's coordinates to obtain weather information
