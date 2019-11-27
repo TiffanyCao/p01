@@ -158,9 +158,9 @@ alnasserA -- 2019-11-24 14:30
 
 tiffanyC -- 2019-11-25 08:09
     HOME STRETCH PLAN:
-    - import images from Wikipedia API (Ayham + Clement)
+    - import images from Wikipedia API (Clement)
     - store city information (city name, country name, currency code, urls of images, Wikipedia info) (Kiran)
-    - add more Bootstrap to HTML pages (in particular: weather.html) (Kiran)
+    - add more Bootstrap to HTML pages (in particular: weather.html) (Ayham)
     - update design doc (Clement + Tiffany)
 
 kiranV -- 2019-11-25 15:30
@@ -168,7 +168,7 @@ kiranV -- 2019-11-25 15:30
     - Reorganized code for map API functions, /city route calls, made code more readable
 
 ayhamA -- 2019-11-25 22:00
-    - STUFF
+    - Wikipedia thingies and stuff
 
 tiffanyC -- 2019-11-25 22:00
     - STUFF
