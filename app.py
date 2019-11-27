@@ -170,6 +170,8 @@ def loadcitydata_tosession(cityname):
     session['desiredLat'] = data[4]
     session['desiredLon'] = data[5]
     session['images'] = data[6].split(',')
+    session['baseCurrency'] = base_currency()['currency']['code']
+
 # =================== Part 2: API Accessing Functions ===================
 
 mapquest_key = keys['mapquest'] # retreving key from json file
@@ -337,17 +339,20 @@ def process_city():
 # uses Currency API to obtain currency exchange rates based on session['destination']
 @app.route("/currency")
 def money():
-    baseC = base_currency()['currency']['code']
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
-    check = checkCurrency(baseC, session['desiredCurrency']) # check if the base-destination pair is in database
+    print(request.args.get('changedCurrency'))
+    if request.args.get('changedCurrency') != "0" and request.args.get('changedCurrency') is not None: # if the user wants to change their base currency
+        session['baseCurrency'] = request.args.get('changedCurrency')
+    print(session['baseCurrency'])
+    check = checkCurrency(session['baseCurrency'], session['desiredCurrency']) # check if the base-destination pair is in database
     # print(check)
     if check == "need update" or check == "pair not found": # if the rate doesn't exist or needs to be updated
-        u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + baseC)
+        u = urllib.request.urlopen("https://api.exchangerate-api.com/v4/latest/" + session['baseCurrency'])
         response= u.read()
         data = json.loads(response)
         data = data['rates'][session['desiredCurrency']]
-        updateCurrency(baseC, session['desiredCurrency'], str(data), str(date.today()))
+        updateCurrency(session['baseCurrency'], session['desiredCurrency'], str(data), str(date.today()))
         flash('Data received live from Currency Exchange Rate API')
     else: # otherwise, return the rate
         data = check
@@ -359,7 +364,7 @@ def money():
         outcome = "Please input a value."
     else:
         outcome = "" + str(float(input) * data)
-    return render_template("currency.html", basecurrency = baseC, rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome, allcurrencies = currencies)
+    return render_template("currency.html", basecurrency = session['baseCurrency'], rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome, allcurrencies = currencies)
 
 
 # uses Dark Sky API and the city's coordinates to obtain weather information
