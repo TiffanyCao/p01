@@ -26,6 +26,7 @@ mapquest_staticmap_request = "https://www.mapquestapi.com/staticmap/v5/map?key={
 
 def cachemap(url):
     # TODO: yeet
+    pass
 
 def checkCurrency(base, destination):
     if base == destination:
