@@ -18,15 +18,48 @@ keys = json.load(keyfile)
 
 destinationC = "EUR"
 DB_FILE = "data/travel.db"
-
+STATICMAP_FILE = "static/map.jpg"
 
 # =================== Part 1: Database/Table Accessing Functions ===================
 
 mapquest_staticmap_request = "https://www.mapquestapi.com/staticmap/v5/map?key={}&center={},{}&size=720,405&zoom={}"
+# map_cache (city TEXT, latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, img BLOB);
 
-def cachemap(url):
-    # TODO: yeet
-    pass
+def cleancache():
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "DELETE FROM map_cache WHERE NOT last_cached = '{}'".format(date.today())
+    c.execute(command)
+    db.commit()
+    db.close()
+
+def cache_available(lat,lon,zoom):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "SELECT count(*) FROM map_cache WHERE latitude = {} AND longitude = {} AND zoom = {}".format(lat,lon,zoom)
+    c.execute(command)
+    count = c.fetchone()[0]
+    print(count)
+    db.commit()
+    db.close()
+    return count > 0
+
+def writetomapfile(lat,lon,zoom):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "SELECT img FROM map_cache WHERE latitude = {} AND longitude = {} AND zoom = {}".format(lat,lon,zoom)
+    c.execute(command)
+    img_blob = c.fetchone()[0]
+    with open(STATICMAP_FILE,'wb') as f:
+        f.write(bytes(img_blob))
+        f.close()
+
+def cachemap(lat,lon,zoom):
+    if cache_available(lat,lon,zoom):
+        writetomapfile(lat,lon,zoom)
+    else:
+        downloadandcachemap(lat,lon,zoom)
+    cleancache()
 
 def checkCurrency(base, destination):
     if base == destination:
@@ -308,6 +341,22 @@ def downloadcitydata(cityname): # compilation of all downloads that happen at /c
     session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
     flash('Currency symbol: {}'.format(country['currency']['code']))
 
+def downloadandcachemap(lat,lon,zoom):
+    url = getMapUrl(lat,lon,zoom)
+    print(url)
+    u = urllib.request.urlopen(url)
+    img_blob = u.read()
+    with open(STATICMAP_FILE,'wb') as f:
+        f.write(img_blob)
+        f.close()
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "INSERT INTO map_cache (latitude,longitude,zoom,img) VALUES (?, ?, ?, ?)"
+    values = (lat,lon,zoom,img_blob)
+    c.execute(command,values)
+    db.commit()
+    db.close()
+
 # ======================= Part 3: Routes =======================
 
 # landing route
@@ -460,9 +509,8 @@ def displayMap():
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
     zoom = calcZoom(request.args)
-    url = getMapUrl(session['desiredLat'],session['desiredLon'],zoom)
-    cachemap(url)
-    return render_template("map.html", pic = url, newZoom = zoom, city = session['destination'].capitalize())
+    cachemap(session['desiredLat'],session['desiredLon'],zoom)
+    return render_template("map.html", newZoom = zoom, city = session['destination'])
 
 
 if __name__ == "__main__":

@@ -19,6 +19,10 @@ c.execute(command)
 command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, latitude REAL, longitude REAL, info TEXT, images TEXT, last_cached TIMESTAMP)"
 c.execute(command)
 
+# map cache table
+command = "CREATE TABLE IF NOT EXISTS map_cache (latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, img BLOB);"
+c.execute(command)
+
 #================================================
 db.commit()
 db.close()
