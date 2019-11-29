@@ -490,7 +490,7 @@ def information():
 
 @app.route("/login",methods=['GET'])
 def loginpage():
-    return render_template('root.html')
+    return render_template('login.html')
 
 @app.route("/login",methods=['POST'])
 def login_process():

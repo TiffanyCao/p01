@@ -1,0 +1,43 @@
+{% extends "root.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-sm">
+    <div class="card logincard">
+      <div class="card-body">
+        <p class="lead">Login</p>
+        <form action="/login" method="POST">
+          <div class="form-group">
+            <label for="loginUser">Username</label>
+            <input type="text" name="username" class="form-control" id="loginUser"/>
+          </div>
+          <div class="form-group">
+            <label for="loginPass">Password</label>
+            <input type="password" name="password" class="form-control" id="loginPass" />
+          </div>
+          <input type="submit" value="Login" class="btn btn-outline-info" />
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="card logincard">
+      <div class="card-body">
+        <p class="lead">Create an Account</p>
+        <form action="/login" method="POST">
+          <input type="hidden" name="form" value="create" />
+          <div class="form-group">
+            <label for="createUser">Username</label>
+            <input type="text" name="username" class="form-control" id="createUser" placeholder="Create a Username"/>
+          </div>
+          <div class="form-group">
+            <label for="createPass">Password</label>
+            <input type="password" name="password" class="form-control" id="createPass" placeholder="Create Password" />
+            <input type="password" name="passconfirm" class="form-control" placeholder="Confirm your Password" />
+          </div>
+          <input type="submit" value="Create" class="btn btn-outline-success" />
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
