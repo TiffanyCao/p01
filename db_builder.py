@@ -20,7 +20,7 @@ command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PR
 c.execute(command)
 
 # map cache table
-command = "CREATE TABLE IF NOT EXISTS map_cache (latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, img BLOB);"
+command = "CREATE TABLE IF NOT EXISTS map_cache (latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, path TEXT);"
 c.execute(command)
 
 #================================================

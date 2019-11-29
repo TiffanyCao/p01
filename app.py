@@ -23,11 +23,15 @@ STATICMAP_FILE = "static/map.jpg"
 # =================== Part 1: Database/Table Accessing Functions ===================
 
 mapquest_staticmap_request = "https://www.mapquestapi.com/staticmap/v5/map?key={}&center={},{}&size=720,405&zoom={}"
-# map_cache (city TEXT, latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, img BLOB);
+# map_cache (city TEXT, latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, path TEXT);
 
 def cleancache():
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+    command = "SELECT last_cached,path FROM map_cache WHERE NOT last_cached = '{}'".format(date.today())
+    c.execute(command)
+    data = c.fetchone()
+    print(data)
     command = "DELETE FROM map_cache WHERE NOT last_cached = '{}'".format(date.today())
     c.execute(command)
     db.commit()
@@ -42,7 +46,9 @@ def cache_available(lat,lon,zoom):
     print(count)
     db.commit()
     db.close()
-    return count > 0
+    if count:
+        return 'static/maps/lat{}lon{}zoom{}.jpg'.format(lat,lon,zoom)
+    return None
 
 def writetomapfile(lat,lon,zoom):
     db = sqlite3.connect(DB_FILE)
@@ -55,11 +61,11 @@ def writetomapfile(lat,lon,zoom):
         f.close()
 
 def cachemap(lat,lon,zoom):
-    if cache_available(lat,lon,zoom):
-        writetomapfile(lat,lon,zoom)
-    else:
-        downloadandcachemap(lat,lon,zoom)
+    filepath = cache_available(lat,lon,zoom)
+    if not filepath:
+        filepath = downloadandcachemap(lat,lon,zoom)
     cleancache()
+    return filepath
 
 def checkCurrency(base, destination):
     if base == destination:
@@ -346,16 +352,18 @@ def downloadandcachemap(lat,lon,zoom):
     print(url)
     u = urllib.request.urlopen(url)
     img_blob = u.read()
-    with open(STATICMAP_FILE,'wb') as f:
+    filepath = 'static/maps/lat{}lon{}zoom{}.jpg'.format(lat,lon,zoom)
+    with open(filepath,'wb') as f:
         f.write(img_blob)
         f.close()
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    command = "INSERT INTO map_cache (latitude,longitude,zoom,img) VALUES (?, ?, ?, ?)"
-    values = (lat,lon,zoom,img_blob)
+    command = "INSERT INTO map_cache (latitude,longitude,zoom,last_cached,path) VALUES (?, ?, ?, ?, ?)"
+    values = (lat,lon,zoom,date.today(),filepath)
     c.execute(command,values)
     db.commit()
     db.close()
+    return filepath
 
 # ======================= Part 3: Routes =======================
 
@@ -509,8 +517,8 @@ def displayMap():
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
     zoom = calcZoom(request.args)
-    cachemap(session['desiredLat'],session['desiredLon'],zoom)
-    return render_template("map.html", newZoom = zoom, city = session['destination'])
+    filepath = cachemap(session['desiredLat'],session['desiredLon'],zoom)
+    return render_template("map.html", path = filepath, newZoom = zoom, city = session['destination'])
 
 
 if __name__ == "__main__":
