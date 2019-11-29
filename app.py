@@ -219,6 +219,7 @@ def loadcitydata_tosession(cityname):
     session['desiredLon'] = data[5]
     session['images'] = data[6].split(',')
     session['baseCurrency'] = base_currency()['currency']['code']
+    print('city data loaded')
 
 # =================== Part 2: API Accessing Functions ===================
 
@@ -346,6 +347,7 @@ def downloadcitydata(cityname): # compilation of all downloads that happen at /c
     session['desiredCountry'] = geoloc['country']
     session['mapUrl'] = geoloc['mapUrl']
     country = country_info(geoloc['country']) # get the information of the desired country
+    session['baseCurrency'] = base_currency()['currency']['code']
     # print(geoloc['country'])
     session['desiredCurrency'] = country['currency']['code'] # get the currency object for the country
     flash('Currency symbol: {}'.format(country['currency']['code']))
@@ -407,7 +409,7 @@ def money():
     if session.get('destination') is None:
         return redirect(url_for('landing_page'))
     print(request.args.get('changedCurrency'))
-    if request.args.get('changedCurrency') != "0" and request.args.get('changedCurrency') is not None: # if the user wants to change their base currency
+    if request.args.get('changedCurrency') != "0" and request.args.get('changedCurrency'): # if the user wants to change their base currency
         session['baseCurrency'] = request.args.get('changedCurrency')
     # print(session['baseCurrency'])
     check = checkCurrency(session['baseCurrency'], session['desiredCurrency']) # check if the base-destination pair is in database
