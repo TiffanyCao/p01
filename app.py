@@ -349,7 +349,7 @@ def money():
     print(request.args.get('changedCurrency'))
     if request.args.get('changedCurrency') != "0" and request.args.get('changedCurrency') is not None: # if the user wants to change their base currency
         session['baseCurrency'] = request.args.get('changedCurrency')
-    print(session['baseCurrency'])
+    # print(session['baseCurrency'])
     check = checkCurrency(session['baseCurrency'], session['desiredCurrency']) # check if the base-destination pair is in database
     # print(check)
     if check == "need update" or check == "pair not found": # if the rate doesn't exist or needs to be updated

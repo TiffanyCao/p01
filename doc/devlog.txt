@@ -171,10 +171,17 @@ ayhamA -- 2019-11-25 22:00
     - Wikipedia thingies and stuff
 
 tiffanyC -- 2019-11-25 22:00
-    - STUFF
+    - working on currency options
 
 kiranV -- 2019-11-25 23:50
     - Restructured calls to wikipedia info and images to be contained within /city route
     - Organized wikipedia functions into separate functions, made code a little bit cleaner
     - Added info and image urls to place_info database
     - Made city name in database match wikipedia title to avoid duplicate database entries due to typos
+
+clementC -- 2019-11-27 08:30
+    - working on site map and component map of design doc
+
+tiffanyC -- 2019-11-28 23:50
+    - completed currency options. Users can now choose a base currency and make conversions with it. Their chosen currency will become the updated session variable
+    
