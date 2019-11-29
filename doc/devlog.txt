@@ -155,3 +155,42 @@ alnasserA -- 2019-11-24 14:02
 
 alnasserA -- 2019-11-24 14:30
     - updated design doc to include change for api
+
+tiffanyC -- 2019-11-25 08:09
+    HOME STRETCH PLAN:
+    - import images from Wikipedia API (Clement)
+    - store city information (city name, country name, currency code, urls of images, Wikipedia info) (Kiran)
+    - add more Bootstrap to HTML pages (in particular: weather.html) (Ayham)
+    - update design doc (Clement + Tiffany)
+
+kiranV -- 2019-11-25 15:30
+    - Built out methods for database calls on place_info table; information now gets cached in travel.db
+    - Reorganized code for map API functions, /city route calls, made code more readable
+
+ayhamA -- 2019-11-25 22:00
+    - Wikipedia thingies and stuff
+
+tiffanyC -- 2019-11-25 22:00
+    - working on currency options
+
+kiranV -- 2019-11-25 23:50
+    - restructured calls to wikipedia info and images to be contained within /city route
+    - organized wikipedia functions into separate functions, made code a little bit cleaner
+    - added info and image urls to place_info database
+    - made city name in database match wikipedia title to avoid duplicate database entries due to typos
+
+kiranV -- 2019-11-27 08:15
+    - created first attempt at map caching structures, downloads file and loads it into a temporary file
+    - this will likely be modified; does not allow for multiple users at once (?)
+    - it's also currently ballooning the size of the database file
+
+clementC -- 2019-11-27 08:30
+    - working on site map and component map of design doc
+
+tiffanyC -- 2019-11-28 23:50
+    - completed currency options. Users can now choose a base currency and make conversions with it. Their chosen currency will become the updated session variable
+
+kiranV -- 2019-11-29 10:18
+    - restructured map caching to put the images into separate files
+    - this fixes problem of gigantic database filesize, and the problem of multiple simultaneous users
+    - untested is the deletion of files

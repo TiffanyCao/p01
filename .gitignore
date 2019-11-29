@@ -159,6 +159,7 @@ flycheck_*.el
 
 # End of https://www.gitignore.io/api/emacs
 
+# images in the database
+/static/maps/*.jpg
 
-#key file
-*.json
+./idea/*
