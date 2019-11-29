@@ -9,7 +9,7 @@
   </div>
   <br>
   <div class = "row">
-    <h5> If your base currency is incorrect, choose from the available currencies here: </h5>
+    <h5 style = "color: darkblue;"> If your base currency is incorrect, choose from the available currencies here: </h5>
     <form action = "/currency" id = "choose">
       <div class="drop" style = "width:200px;">
         <select name = "changedCurrency" form = "choose">
@@ -19,7 +19,9 @@
           {% endfor %}
         </select>
       </div>
-      <input type = "submit">
+      <div class="submit" style = "padding-top: 5px;">
+        <input type = "submit">
+      </div>
     </form>
   </div>
 <br>
