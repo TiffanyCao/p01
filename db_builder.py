@@ -6,23 +6,28 @@ import csv
 
 DB_FILE= "data/travel.db"
 
-db = sqlite3.connect(DB_FILE) #open if file exists, otherwise create
-c = db.cursor()               #facilitate db ops
+def builddb():
+    db = sqlite3.connect(DB_FILE) #open if file exists, otherwise create
+    c = db.cursor()               #facilitate db ops
 
-#================================================
+    #================================================
 
-# "currency" table
-command = "CREATE TABLE IF NOT EXISTS currency (base TEXT, destination TEXT, rate REAL, timestamp BLOB)"
-c.execute(command)
+    # "currency" table
+    command = "CREATE TABLE IF NOT EXISTS currency (base TEXT, destination TEXT, rate REAL, timestamp BLOB)"
+    c.execute(command)
 
-# place information table
-command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, latitude REAL, longitude REAL, info TEXT, images TEXT, last_cached TIMESTAMP)"
-c.execute(command)
+    # place information table
+    command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, latitude REAL, longitude REAL, info TEXT, images TEXT, last_cached TIMESTAMP)"
+    c.execute(command)
 
-# map cache table
-command = "CREATE TABLE IF NOT EXISTS map_cache (latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, path TEXT);"
-c.execute(command)
+    # map cache table
+    command = "CREATE TABLE IF NOT EXISTS map_cache (latitude REAL, longitude REAL, zoom INTEGER, last_cached TEXT, path TEXT);"
+    c.execute(command)
 
-#================================================
-db.commit()
-db.close()
+    # users table
+    command = "CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT, uid INTEGER PRIMARY KEY)"
+    c.execute(command)
+
+    #================================================
+    db.commit()
+    db.close()

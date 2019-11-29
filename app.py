@@ -9,6 +9,7 @@ import urllib
 import sqlite3
 from datetime import date
 from os import urandom,remove
+from db_builder import builddb
 
 app = Flask(__name__)
 
@@ -17,9 +18,10 @@ app.secret_key = urandom(32)
 keyfile = open('keys.json')
 keys = json.load(keyfile)
 
+builddb()
+
 destinationC = "EUR"
 DB_FILE = "data/travel.db"
-STATICMAP_FILE = "static/map.jpg"
 
 # =================== Part 1: Database/Table Accessing Functions ===================
 
@@ -221,6 +223,40 @@ def loadcitydata_tosession(cityname):
     session['baseCurrency'] = base_currency()['currency']['code']
     print('city data loaded')
 
+def checkuser(username,password):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = 'SELECT username,password,uid FROM users WHERE username=? AND password=?;'
+    values = (username,password)
+    c.execute(command,values)
+    result = c.fetchone()
+    db.commit()
+    db.close()
+    if result:
+        return result[2]
+    return 0
+
+def userid(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = 'SELECT username,uid FROM users WHERE username=?;'
+    c.execute(command,[username])
+    result = c.fetchone()
+    db.commit()
+    db.close()
+    if result:
+        return result[1]
+    return None
+
+def createaccount(username,password):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = 'INSERT INTO users(username,password) VALUES (?,?);'
+    values = (username,password)
+    c.execute(command,values)
+    db.commit()
+    db.close()
+
 # =================== Part 2: API Accessing Functions ===================
 
 mapquest_key = keys['mapquest'] # retreving key from json file
@@ -376,8 +412,10 @@ def downloadandcachemap(lat,lon,zoom):
 @app.route("/")
 def landing_page():
     # print(session['destination'])
-    session.clear()
-    flash('Previous search successfully cleared.')
+
+    # if 'destination' in session:
+    #     session.clear()
+    #     flash('Previous search cleared.')
 
     # alert users of missing keys if they are missing
     for service in keys:
@@ -494,7 +532,31 @@ def loginpage():
 
 @app.route("/login",methods=['POST'])
 def login_process():
-    return redirect(url_for('landing_page'))
+    if request.form['form'] == "login":
+        # login form filled out, log user in
+        uid = checkuser(request.form['username'],request.form['password'])
+        if uid:
+            session['username'] = request.form['username']
+            session['uid'] = uid
+            flash("Successful login.")
+            return redirect(url_for('landing_page'))
+        else:
+            flash("Incorrect username/password. Please try again.")
+            return render_template('login.html')
+    else:
+        username = request.form['username']
+        password = request.form['password']
+        # create form filled out, create account
+        if len(username) < 3 or len(password) < 3:
+            flash('Username and/or password is too short; use a minimum of 3 characters.')
+        elif password != request.form['passconfirm']:
+            flash('Passwords do not match.')
+        elif userid(username):
+            flash('Username is already in use; please choose another username')
+        else:
+            createaccount(username,password)
+            flash('Account successfully created; please log in.')
+        return render_template('login.html')
 
 def img_stuffs(title, page):
     title_encoded = title.replace(' ','%20')
