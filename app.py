@@ -246,7 +246,7 @@ def geolocate(city):
     out['mapUrl'] = result['mapUrl']
     li = out['mapUrl'].split("=")
     dimensions = li[3].split("&")
-    dimensions[0] = "500,500"
+    dimensions[0] = "700,500"
     li[3] = "&".join(dimensions)
     out['mapUrl'] = "=".join(li)
     return out
