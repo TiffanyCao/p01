@@ -488,6 +488,13 @@ def information():
     return render_template("information.html", city=session['destination'], info=data, length=len(data),
                            image1=images[0], image2=images[1], image3=images[2])
 
+@app.route("/login",methods=['GET'])
+def loginpage():
+    return render_template('root.html')
+
+@app.route("/login",methods=['POST'])
+def login_process():
+    return redirect(url_for('landing_page'))
 
 def img_stuffs(title, page):
     title_encoded = title.replace(' ','%20')
