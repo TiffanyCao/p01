@@ -114,7 +114,7 @@ def geolocate(city):
     session['desiredLon'] = out['lon']
     li = out['mapUrl'].split("=")
     dimensions = li[3].split("&")
-    dimensions[0] = "500,500"
+    dimensions[0] = "700,500"
     li[3] = "&".join(dimensions)
     session['mapUrl'] = "=".join(li)
     return out
