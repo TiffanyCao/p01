@@ -8,10 +8,11 @@ import json
 import urllib
 import sqlite3
 from datetime import date
+from os import urandom,remove
 
 app = Flask(__name__)
 
-app.secret_key = 'water'
+app.secret_key = urandom(32)
 
 keyfile = open('keys.json')
 keys = json.load(keyfile)
@@ -30,8 +31,10 @@ def cleancache():
     c = db.cursor()
     command = "SELECT last_cached,path FROM map_cache WHERE NOT last_cached = '{}'".format(date.today())
     c.execute(command)
-    data = c.fetchone()
+    data = c.fetchall()
     print(data)
+    for oldimg in data:
+        remove(oldimg[1])
     command = "DELETE FROM map_cache WHERE NOT last_cached = '{}'".format(date.today())
     c.execute(command)
     db.commit()
