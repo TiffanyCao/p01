@@ -168,10 +168,14 @@ kiranV -- 2019-11-25 15:30
     - Reorganized code for map API functions, /city route calls, made code more readable
 
 ayhamA -- 2019-11-25 22:00
-    - Wikipedia thingies and stuff
+    - Wikipedia thingies and images
+    - tried to obtain Wikipedia images from Wikipedia API to match city information
+    - certain cities had bad image urls that broke the code
+        - made cities with bad image urls have default images after try and catch error didn't work
 
 tiffanyC -- 2019-11-25 22:00
-    - working on currency options
+    - working on currency options for users to choose their base currency
+        - using dropdown menu
 
 kiranV -- 2019-11-25 23:50
     - restructured calls to wikipedia info and images to be contained within /city route
@@ -186,6 +190,7 @@ kiranV -- 2019-11-27 08:15
 
 clementC -- 2019-11-27 08:30
     - working on site map and component map of design doc
+    - site map reflects map html and the new
 
 tiffanyC -- 2019-11-28 23:50
     - completed currency options. Users can now choose a base currency and make conversions with it. Their chosen currency will become the updated session variable
