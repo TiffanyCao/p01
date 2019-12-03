@@ -40,6 +40,7 @@ def cleancache():
     db.commit()
     db.close()
 
+'''checks if map url for the specified location is already stored, returns url if found'''
 def cache_available(lat,lon,zoom):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -52,6 +53,7 @@ def cache_available(lat,lon,zoom):
     if count:
         return 'static/maps/lat{}lon{}zoom{}.jpg'.format(lat,lon,zoom)
     return None
+
 
 def writetomapfile(lat,lon,zoom):
     db = sqlite3.connect(DB_FILE)
@@ -70,6 +72,7 @@ def cachemap(lat,lon,zoom):
     cleancache()
     return filepath
 
+'''returns currency exchange data if the data was retrieved on the same day, returns strings otehrwise'''
 def checkCurrency(base, destination):
     if base == destination:
         return 1.0
@@ -90,7 +93,7 @@ def checkCurrency(base, destination):
     db.close()
     return "pair not found"
 
-
+'''checks for updated currency exchange rates and updates the database with the new data'''
 def updateCurrency(base, destination, rate, timestamp):
     db = sqlite3.connect(DB_FILE)  # open database
     c = db.cursor()
@@ -146,7 +149,8 @@ def getUrl(weather):
 # command = "CREATE TABLE IF NOT EXISTS place_info (countrycode TEXT, city TEXT PRIMARY KEY, currency TEXT, info TEXT, last_cached TIMESTAMP)"
 
 
-def cachecity(cityname): # checks whether city is in database, updates/creates as necessary, adds city to session
+'''checks whether city is in database, updates/creates as necessary, adds city to session'''
+def cachecity(cityname):
     page,title = get_citypage(cityname)
     session['destination'] = title
     session['page'] = page
@@ -178,6 +182,7 @@ def cachecity(cityname): # checks whether city is in database, updates/creates a
         downloadcitydata(title)
         storesession(True)
 
+'''stores city session into the database'''
 def storesession(is_newcity):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -205,6 +210,7 @@ update place_info
     db.commit()
     db.close()
 
+'''loads city session from a previously saved session in the database'''
 def loadcitydata_tosession(cityname):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -227,7 +233,7 @@ mapquest_key = keys['mapquest'] # retreving key from json file
 mapquest_request = "http://open.mapquestapi.com/geocoding/v1/address?key={}&location={}"
 
 
-# function that uses the MapQuest API to find the country, coordinates, and map url of a given city
+'''function that uses the MapQuest API to find the country, coordinates, and map url of a given city'''
 def geolocate(city):
     city_encoded = city.replace(' ','%20')
     url = mapquest_request.format(mapquest_key,city_encoded)
@@ -257,6 +263,7 @@ def getMapUrl(lat,lon,newZoom):
     # print(url)
     return url
 
+'''calculates the new Zoom value for the map'''
 def calcZoom(args):
     zAdjust = 0
     if ("oldZoom" in args):
@@ -269,29 +276,24 @@ def calcZoom(args):
         oldZoom = 12
     if ('zoom' in args):
         if (args['zoom'] == "Zoom In"):
-           #  print("zoom in")
             if (int(oldZoom) < 19 ):
                 zAdjust +=1
         else:
-            # print("zoom out")
             if (int(oldZoom) > 0):
                 zAdjust -=1
     # process zooming of map
     newZoom = oldZoom + zAdjust
-   #  print(str(oldZoom) + "," + str(newZoom))
     return newZoom
 
 restcountries_request = "https://restcountries.eu/rest/v2/alpha/{}"
 
 
-# function that uses the REST Countries API to find the currency symbol given the country
+'''function that uses the REST Countries API to find the currency symbol given the country'''
 def country_info(country): # country code, 2 letters (would work w a three letter code too)
     url = restcountries_request.format(country)
     u = urllib.request.urlopen(url)
-    #print(urllib.request.getproxies()) # just curious
     response = u.read()
     data = json.loads(response)
-
     out = {} # again to nicely package only the results we want, makes other code cleaner!
     out['currency'] = data['currencies'][0]
     out['name'] = data['name']
@@ -311,6 +313,9 @@ def base_currency():
 
 wikipedia_request1 = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&utf8=&format=json"
 wikipedia_request2 = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext&exintro&titles={}&format=json"
+
+'''gets the page information of the first wikipedia page result from a search
+returns a tuple (page id number, page title'''
 def get_citypage(city):
     city_encoded = city.replace(' ','%20')
     u = urllib.request.urlopen(wikipedia_request1.format(city_encoded))
@@ -321,6 +326,10 @@ def get_citypage(city):
     title = data['query']['search'][0]['title']  # get Wikipedia page title
     # session['destination'] = title
     return page,title
+
+'''uses data returned by the previous function
+processes and formats the page content
+returns the first 9 sentences of the page as a string'''
 def get_citydata(title,page):
     title_encoded = title.replace(' ','%20')
     u = urllib.request.urlopen(wikipedia_request2.format(title_encoded))
@@ -332,8 +341,8 @@ def get_citydata(title,page):
         data = data[0:9]
     return '. '.join(data)
 
-
-def downloadcitydata(cityname): # compilation of all downloads that happen at /city
+'''compilation of all downloads that happen at /city'''
+def downloadcitydata(cityname): 
     info = get_citydata(session['destination'],session['page'])
     print('getting images')
     images = img_stuffs(session['destination'],session['page'])
@@ -372,7 +381,7 @@ def downloadandcachemap(lat,lon,zoom):
 
 # ======================= Part 3: Routes =======================
 
-# landing route
+'''landing route'''
 @app.route("/")
 def landing_page():
     # print(session['destination'])
@@ -386,7 +395,7 @@ def landing_page():
     return render_template("welcome.html")
 
 
-# processes input from the Search box and redirects to information route
+'''processes input from the Search box and redirects to information route'''
 @app.route("/city")
 def process_city():
     if request.args.get('city_name') is None:
@@ -403,7 +412,7 @@ def process_city():
     # print(country['name'])
     # print(country['currency']['code'])
 
-# uses Currency API to obtain currency exchange rates based on session['destination']
+'''uses Currency API to obtain currency exchange rates based on session['destination']'''
 @app.route("/currency")
 def money():
     if session.get('destination') is None:
@@ -434,7 +443,7 @@ def money():
     return render_template("currency.html", basecurrency = session['baseCurrency'], rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome, allcurrencies = currencies)
 
 
-# uses Dark Sky API and the city's coordinates to obtain weather information
+'''uses Dark Sky API and the city's coordinates to obtain weather information'''
 @app.route("/weather")
 def forecast():
     if session.get('destination') is None:
@@ -457,7 +466,7 @@ def forecast():
     # print(data['hourly']['data'])
     return render_template("weather.html", cityname = session['destination'], summaryD = summaryD, summaryW = summaryW, week = week, length = len(week), hours = now, image = url, unit = units)
 
-# nice packaging of API info
+'''nice packaging of API info'''
 def genDicNow(dic):
     li = ['icon','temperatureHigh','temperatureLow', 'temperature','windSpeed', 'precipIntensity', 'precipProbability', 'precipType', 'cloudCover', 'humidity', 'summary']
     newSet = {}
@@ -467,7 +476,7 @@ def genDicNow(dic):
                 newSet[idx] = dic[idx]
     return newSet
 
-# nice packaging of API info
+'''nice packaging of API info'''
 def genDicWeek(dic):
     li = ['icon','temperatureHigh','temperatureLow', 'temperature','windSpeed', 'precipIntensity', 'precipProbability', 'precipType', 'cloudCover', 'humidity', 'summary']
     newSet = []
@@ -478,7 +487,7 @@ def genDicWeek(dic):
                 newSet[i][idx] = dic[i][idx]
     return newSet
 
-# uses Wikipedia API to get text from the Wiki page on the city
+'''uses Wikipedia API to get text from the Wiki page on the city'''
 @app.route("/info")
 def information():
     if session.get('destination') is None:
@@ -516,7 +525,7 @@ def img_stuffs(title, page):
     print(images)
     return images
 
-# uses the map URL from MapQuest API to get the map
+'''uses the map URL from MapQuest API to get the map'''
 @app.route("/map")
 def displayMap():
     if session.get('destination') is None:
