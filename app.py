@@ -151,6 +151,8 @@ def getUrl(weather):
 
 '''checks whether city is in database, updates/creates as necessary, adds city to session'''
 def cachecity(cityname):
+    if get_citypage(cityname) == "be more specific":
+        return "be more specific"
     page,title = get_citypage(cityname)
     session['destination'] = title
     session['page'] = page
@@ -225,6 +227,8 @@ def loadcitydata_tosession(cityname):
     session['desiredLon'] = data[5]
     session['images'] = data[6].split(',')
     session['baseCurrency'] = base_currency()['currency']['code']
+    session['currencyinput'] = 1
+    session['currencyoutcome'] = "Please input a value."
     print('city data loaded')
 
 # =================== Part 2: API Accessing Functions ===================
@@ -321,9 +325,17 @@ def get_citypage(city):
     u = urllib.request.urlopen(wikipedia_request1.format(city_encoded))
     response = u.read()
     data = json.loads(response)
-    page = data['query']['search'][0]  # get page ID of the Wikipedia page
-    page = page['pageid']
-    title = data['query']['search'][0]['title']  # get Wikipedia page title
+    check = data['query']['search'][0]['snippet']
+    print("check here")
+    print(check)
+    if "most commonly refers to" in check:
+        print("is in string")
+        return "be more specific"
+    else:
+        print("is not in string")
+        page = data['query']['search'][0]  # get page ID of the Wikipedia page
+        page = page['pageid']
+        title = data['query']['search'][0]['title']  # get Wikipedia page title
     # session['destination'] = title
     return page,title
 
@@ -342,7 +354,7 @@ def get_citydata(title,page):
     return '. '.join(data)
 
 '''compilation of all downloads that happen at /city'''
-def downloadcitydata(cityname): 
+def downloadcitydata(cityname):
     info = get_citydata(session['destination'],session['page'])
     print('getting images')
     images = img_stuffs(session['destination'],session['page'])
@@ -387,7 +399,7 @@ def landing_page():
     # print(session['destination'])
     session.clear()
     flash('Previous search successfully cleared.')
-
+    flash('If the page refreshes after your search, it means your given city name is ambiguous. Please put a more specific name. (Suggestion: give the country.)')
     # alert users of missing keys if they are missing
     for service in keys:
         if keys[service] == 'YOUR_API_KEY_HERE':
@@ -402,11 +414,14 @@ def process_city():
         return redirect(url_for('landing_page'))
     cityname = request.args['city_name']
     try:
-        cachecity(cityname)
+        if cachecity(cityname) == "be more specific": # if the city name given is too ambiguous
+            print("BE MORE SPECIFIC")
+            flash("Ambiguous city name. Please put a more specific name. (Suggestion: give the country as well.)", 'cityerror')
+            return redirect(url_for('landing_page'))
         return redirect(url_for('information'))
     except ValueError as e:
         session.clear() # clear previous session
-        flash('Error while accessing information: {}'.format(e),'error') # check if spelling of input is correct
+        flash('Error while accessing information: {}'.format(e),'cityerror') # check if spelling of input is correct
         return redirect(url_for('landing_page'))
 
     # print(country['name'])
@@ -435,12 +450,11 @@ def money():
         flash('Data retreived from cache')
     # calculator functioning
     input = request.args.get("inputval")
-    if input is None:
-        input = 1
-        outcome = "Please input a value."
-    else:
+    if input is not None: # if there's new input
+        session['currencyinput'] = input # updated session
         outcome = "" + str(float(input) * data)
-    return render_template("currency.html", basecurrency = session['baseCurrency'], rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = input, conversion = outcome, allcurrencies = currencies)
+        session['currencyoutcome'] = outcome
+    return render_template("currency.html", basecurrency = session['baseCurrency'], rate = data, cityname = session['destination'], targetcurrency = session['desiredCurrency'], money = session['currencyinput'], conversion = session['currencyoutcome'], allcurrencies = currencies)
 
 
 '''uses Dark Sky API and the city's coordinates to obtain weather information'''
