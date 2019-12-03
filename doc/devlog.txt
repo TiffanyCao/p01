@@ -200,3 +200,7 @@ kiranV -- 2019-11-29 10:18
     - restructured map caching to put the images into separate files
     - this fixes problem of gigantic database filesize, and the problem of multiple simultaneous users
     - untested is the deletion of files
+
+tiffanyC -- 2019-12-03 18:09
+    - made flashed message for ambiguous city name that can't be found on Wikipedia API
+    - the currency conversion inputs and outputs are stored in session; they will remain even if user goes to another page and comes back
