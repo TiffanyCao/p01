@@ -66,11 +66,14 @@ Documentation [here:](https://docs.google.com/document/d/1JLCpSsibgXBVDN8C8FwyYY
 1. Wikipedia API: This API is used to obtain information on the city, as well as display images of the city in the information page. The Wikipedia API is very expansive and has many different query calls; here are the main calls we used in Ocean Getaways.
   - For obtaining text information: action = query, list = search, srsearch = {city name}, prop = extracts, explaintext, exintro, titles = {title of Wikipedia page}
   - For obtaining urls of images: action = query, titles = {image title}, prop = images, prop = imageinfo, iiprop = url
+  
 Documentation [here:](https://docs.google.com/document/d/1KNf_h_Rysiftc88uZNZO4LMpAyQprUTSj-eg5CMz9a8/edit?usp=sharing)
 
 2. Currency Exchange API: This API is used to obtain currency exchange rates between a given base country and 70 other currencies in the world. 
+
 Documentation [here:](https://docs.google.com/document/d/1yTckLoGBHA-C37hhukXOc76Jh_770L7m3Moj-wMFeUU/edit?usp=sharing)
 
 3. REST Countries API: This API is used to obtain the local currency of a given country. Used in conjunction with IP Stack to find the country the user's IP address resides in and the currency of that country.
+
 Documentation [here:](https://docs.google.com/document/d/1C-umxnBAIUzQI9kLDaXG4-YbFsiOwwRTJ5c-DXAHTRM/edit?usp=sharing)
 
