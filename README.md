@@ -40,7 +40,7 @@ python3 app.py
 None of the below keys require payment information for the beginning of usage. The only necessary resource is an email address.
 
 ##### MapQuest Developer API - Geolocation
-Documentation [here:](https://docs.google.com/document/d/1HnzToCm_MkkXAyboatQQb0dZiSAYDD04QcwS2UFF4XI/edit?usp=sharing)
+Documentation [here](https://docs.google.com/document/d/1HnzToCm_MkkXAyboatQQb0dZiSAYDD04QcwS2UFF4XI/edit?usp=sharing)
 
 1. Register for an account on [MapQuest Developer](https://developer.mapquest.com/plan_purchase/steps/business_edition/business_edition_free/register)
   - While you do have to fill out all fields, none matter other than your email address.
@@ -48,7 +48,7 @@ Documentation [here:](https://docs.google.com/document/d/1HnzToCm_MkkXAyboatQQb0
 3. Open the `keys.json` file in your repository, and paste the key in place of `YOUR_API_KEY_HERE` in the 'mapquest' field
 
 ##### Dark Sky API - Weather Forecast
-Documentation [here:](https://docs.google.com/document/d/11P20BGIGfKRNu8uG3Yxn1DkM_quHjr5254bGpjHaX14/edit?usp=sharing)
+Documentation [here](https://docs.google.com/document/d/11P20BGIGfKRNu8uG3Yxn1DkM_quHjr5254bGpjHaX14/edit?usp=sharing)
 
 1. Register an account on [Dark Sky API](https://darksky.net/dev/register)
   - the only required fields are an email and password
@@ -56,7 +56,7 @@ Documentation [here:](https://docs.google.com/document/d/11P20BGIGfKRNu8uG3Yxn1D
 3. Copy the secret key displayed on the landing page post-login, and paste it into `keys.json` in place of `YOUR_API_KEY_HERE` the 'darksky' field
 
 #### IP Stack API - Geolocation part 2
-Documentation [here:](https://docs.google.com/document/d/1JLCpSsibgXBVDN8C8FwyYYiO1jIob_qk1owP3F1gNyQ/edit?usp=sharing) 
+Documentation [here](https://docs.google.com/document/d/1JLCpSsibgXBVDN8C8FwyYYiO1jIob_qk1owP3F1gNyQ/edit?usp=sharing) 
 
 1. Register an account on [their site](https://ipstack.com/)
 2. Open dashboard and yoink the API key you're given
@@ -66,14 +66,11 @@ Documentation [here:](https://docs.google.com/document/d/1JLCpSsibgXBVDN8C8FwyYY
 1. Wikipedia API: This API is used to obtain information on the city, as well as display images of the city in the information page. The Wikipedia API is very expansive and has many different query calls; here are the main calls we used in Ocean Getaways.
   - For obtaining text information: action = query, list = search, srsearch = {city name}, prop = extracts, explaintext, exintro, titles = {title of Wikipedia page}
   - For obtaining urls of images: action = query, titles = {image title}, prop = images, prop = imageinfo, iiprop = url
-  
-Documentation [here:](https://docs.google.com/document/d/1KNf_h_Rysiftc88uZNZO4LMpAyQprUTSj-eg5CMz9a8/edit?usp=sharing)
+  - Documentation [here](https://docs.google.com/document/d/1KNf_h_Rysiftc88uZNZO4LMpAyQprUTSj-eg5CMz9a8/edit?usp=sharing)
 
 2. Currency Exchange API: This API is used to obtain currency exchange rates between a given base country and 70 other currencies in the world. 
-
-Documentation [here:](https://docs.google.com/document/d/1yTckLoGBHA-C37hhukXOc76Jh_770L7m3Moj-wMFeUU/edit?usp=sharing)
+  - Documentation [here](https://docs.google.com/document/d/1yTckLoGBHA-C37hhukXOc76Jh_770L7m3Moj-wMFeUU/edit?usp=sharing)
 
 3. REST Countries API: This API is used to obtain the local currency of a given country. Used in conjunction with IP Stack to find the country the user's IP address resides in and the currency of that country.
-
-Documentation [here:](https://docs.google.com/document/d/1C-umxnBAIUzQI9kLDaXG4-YbFsiOwwRTJ5c-DXAHTRM/edit?usp=sharing)
+  - Documentation [here](https://docs.google.com/document/d/1C-umxnBAIUzQI9kLDaXG4-YbFsiOwwRTJ5c-DXAHTRM/edit?usp=sharing)
 
