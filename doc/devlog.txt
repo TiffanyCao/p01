@@ -190,7 +190,8 @@ kiranV -- 2019-11-27 08:15
 
 clementC -- 2019-11-27 08:30
     - working on site map and component map of design doc
-    - site map reflects map html and the new
+    - site map reflects map html and the new navigation bar
+    - design doc also reflects the APIs that we've scrapped and replaced with other APIs (such as Unsplash being replaced with Wikipedia API for images)
 
 tiffanyC -- 2019-11-28 23:50
     - completed currency options. Users can now choose a base currency and make conversions with it. Their chosen currency will become the updated session variable
