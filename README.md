@@ -1,11 +1,11 @@
 # Ocean Getaways by Team Boneless Ice
 ## Ayham Alnasser, Clement Chan, Kiran Vuksanaj, and Tiffany Cao (PM)
 
-#### PROGRAM OVERVIEW:
+### PROGRAM OVERVIEW:
 
 This website is essentially a helping guide to travelers going to other cities or countries globally. There is a single search form, allowing the users to input a city and country, which will be stored in a session. If the given city and country doesn’t exist, the website will throw an error message. Using the IP Stack API, we can obtain the user’s location, which we can then use to compute the currency exchange, using the Currency Exchange API. The website will also show information regarding the weather conditions of the city given using the Dark Sky API. Finally, using MapQuest and Wikipedia Images, users will be provided with images and a map of the city they gave. As an extra feature, there will also be a small section from the Wikipedia API about the city or country given.
 
-#### ROLES
+### ROLES
 
 ###### FRONT END
   - Kiran (Bootstrap)
@@ -18,7 +18,7 @@ This website is essentially a helping guide to travelers going to other cities o
   - Tiffany: currency conversion and exchange rate database, weather information display with images (Currency Exchange, Dark Sky)
   
  
-#### INSTRUCTIONS FOR INSTALLATION
+### INSTRUCTIONS FOR INSTALLATION
 
 Before beginning, ensure that you have access to git commands and python3 on your terminal. If you have only python3 and not python2 installed, all instances of pip3 and python3 may be replaces with pip and python.
 
@@ -47,7 +47,7 @@ The app can be launched when keys have successfully been procured with:
 python3 app.py
 ```
 
-#### OBTAINING KEYS
+### OBTAINING KEYS
 
 None of the below keys require payment information for the beginning of usage. The only necessary resource is an email address.
 
@@ -67,14 +67,14 @@ Documentation [here](https://docs.google.com/document/d/11P20BGIGfKRNu8uG3Yxn1Dk
 2. Confirm your email address by clicking the link sent to the email address entered, and then log in with your new credentials
 3. Copy the secret key displayed on the landing page post-login, and paste it into `keys.json` in place of `YOUR_API_KEY_HERE` the 'darksky' field
 
-#### IP Stack API - Geolocation part 2
+##### IP Stack API - Geolocation part 2
 Documentation [here](https://docs.google.com/document/d/1JLCpSsibgXBVDN8C8FwyYYiO1jIob_qk1owP3F1gNyQ/edit?usp=sharing) 
 
 1. Register an account on [their site](https://ipstack.com/)
 2. Open dashboard and yoink the API key you're given
 3. Drop the API key into the 'keys.json' in place of the 'YOUR_API...' in the 'ipstack' field
 
-#### OTHER APIs USED - NO KEYS REQUIRED
+### OTHER APIs USED - NO KEYS REQUIRED
 1. Wikipedia API: This API is used to obtain information on the city, as well as display images of the city in the information page. The Wikipedia API is very expansive and has many different query calls; here are the main calls we used in Ocean Getaways.
   - For obtaining text information: action = query, list = search, srsearch = {city name}, prop = extracts, explaintext, exintro, titles = {title of Wikipedia page}
   - For obtaining urls of images: action = query, titles = {image title}, prop = images, prop = imageinfo, iiprop = url
