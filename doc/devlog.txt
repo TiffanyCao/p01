@@ -217,3 +217,8 @@ tiffanyC -- 2019-12-03 20:40
       - includes up-to-date roles of every member
       - hyperlinks to all API cards, descriptions of all APIs used
       - updated the overview of the project
+
+tiffanyC -- 2019-12-04 12:22
+    - resolved issues found during demo today
+    - currency exchange now works
+    - map caching fixed

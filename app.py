@@ -33,8 +33,12 @@ def cleancache():
     c.execute(command)
     data = c.fetchall()
     print(data)
-    for oldimg in data:
-        remove(oldimg[1])
+    if data:
+        for oldimg in data:
+            # print("here is image")
+            # print(oldimg)
+            # print(oldimg[1])
+            remove(oldimg[1])
     command = "DELETE FROM map_cache WHERE NOT last_cached = '{}'".format(date.today())
     c.execute(command)
     db.commit()
@@ -66,10 +70,10 @@ def writetomapfile(lat,lon,zoom):
         f.close()
 
 def cachemap(lat,lon,zoom):
+    # cleancache()
     filepath = cache_available(lat,lon,zoom)
     if not filepath:
         filepath = downloadandcachemap(lat,lon,zoom)
-    cleancache()
     return filepath
 
 '''returns currency exchange data if the data was retrieved on the same day, returns strings otehrwise'''
@@ -227,8 +231,6 @@ def loadcitydata_tosession(cityname):
     session['desiredLon'] = data[5]
     session['images'] = data[6].split(',')
     session['baseCurrency'] = base_currency()['currency']['code']
-    session['currencyinput'] = 1
-    session['currencyoutcome'] = "Please input a value."
     print('city data loaded')
 
 # =================== Part 2: API Accessing Functions ===================
@@ -398,6 +400,7 @@ def downloadandcachemap(lat,lon,zoom):
 def landing_page():
     # print(session['destination'])
     session.clear()
+    cleancache()
     flash('Previous search successfully cleared.')
     flash('If the page refreshes after your search, it means your given city name is ambiguous. Please put a more specific name. (Suggestion: give the country.)')
     # alert users of missing keys if they are missing
@@ -449,6 +452,10 @@ def money():
         data = check
         flash('Data retreived from cache')
     # calculator functioning
+    if 'currencyinput' not in session:
+        session['currencyinput'] = 1
+    if 'currencyoutcome' not in session:
+        session['currencyoutcome'] = "Please input a value."
     input = request.args.get("inputval")
     if input is not None: # if there's new input
         session['currencyinput'] = input # updated session
