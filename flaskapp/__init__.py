@@ -8,18 +8,21 @@ import json
 import urllib
 import sqlite3
 from datetime import date
-from os import urandom,remove
+from os import urandom,remove,path.dirname
 
 app = Flask(__name__)
 
 app.secret_key = urandom(32)
 
-keyfile = open('keys.json')
+DIR = dirname(__file__) or '.'
+DIR += '/'
+
+keyfile = open(DIR+'keys.json')
 keys = json.load(keyfile)
 
 destinationC = "EUR"
-DB_FILE = "data/travel.db"
-STATICMAP_FILE = "static/map.jpg"
+DB_FILE = DIR+"data/travel.db"
+STATICMAP_FILE = DIR+"static/map.jpg"
 
 # =================== Part 1: Database/Table Accessing Functions ===================
 
@@ -127,7 +130,7 @@ def updateCurrency(base, destination, rate, timestamp):
     return "added new pair"
 
 dict = {}
-file = open("weatherLinks.csv", "r") #opens second file with links
+file = open(DIR+"weatherLinks.csv", "r") #opens second file with links
 content = file.readlines() #parse through files by line
 content = content[1:len(content)] #take out the table heading
 for line in content:
@@ -380,7 +383,7 @@ def downloadandcachemap(lat,lon,zoom):
     print(url)
     u = urllib.request.urlopen(url)
     img_blob = u.read()
-    filepath = 'static/maps/lat{}lon{}zoom{}.jpg'.format(lat,lon,zoom)
+    filepath = DIR+'static/maps/lat{}lon{}zoom{}.jpg'.format(lat,lon,zoom)
     with open(filepath,'wb') as f:
         f.write(img_blob)
         f.close()
@@ -557,5 +560,5 @@ def displayMap():
 
 
 if __name__ == "__main__":
-    app.debug = True
-    app.run()
+    app.debug = False
+    app.run(host="0.0.0.0")
