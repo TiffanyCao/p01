@@ -8,13 +8,13 @@ import json
 import urllib
 import sqlite3
 from datetime import date
-from os import urandom,remove,path.dirname
+from os import urandom,remove,path
 
 app = Flask(__name__)
 
 app.secret_key = urandom(32)
 
-DIR = dirname(__file__) or '.'
+DIR = path.dirname(__file__) or '.'
 DIR += '/'
 
 keyfile = open(DIR+'keys.json')
